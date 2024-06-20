@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div id="drag-root">
+      <div id="app">
+        <div id="menu-container">
+          <h1><span>算法可视化</span></h1>
+          <p>提供响应式动画</p>
+          <nav id="root-menu">
+            <ul>
+              <li><a class="btn btn-primary">开始</a></li>
+              <li><a class="btn btn-info">指引</a></li>
+              <li><a class="btn btn-info">在GitHub上查看</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div id="code-menu-container">
+          <nav id="code-menu">
+            <ul>
+              <li><a class="block">汉诺塔问题</a></li>
+              <li><a class="block">最小生成树问题</a></li>
+              <li><a class="block">哈夫曼树构造问题</a></li>
+              <li><a class="block">旅行商(TSP)问题</a></li>
+              <li><a class="block">图的 m 着色问题</a></li>
+              <li><a class="block">快速排序/冒泡排序(二选一)</a></li>
+              <li><a class="block">棋盘覆盖问题</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div id="code-container"></div>
+        <div id="canvas-container">
+          <canvas id="canvas"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>

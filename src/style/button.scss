@@ -1,0 +1,72 @@
+button.btn,
+a.btn {
+  border: 1px solid;
+  border-radius: 999px;
+
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Punctuation SC', 'Inter', ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Noto Sans SC',
+    'Heiti SC', 'DengXian', 'Microsoft YaHei', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  text-align: center;
+  transition: color 0.25s, border-color 0.25s, background-color 0.25s;
+  line-height: 38px;
+  padding: 10px 20px;
+  transition: all 0.2s;
+
+  &.btn-primary {
+    border-color: #747bff;
+    background-color: rgb(100, 108, 255);
+    color: rgb(255, 255, 255);
+    &:hover {
+      background-color: rgb(83, 91, 242);
+      border-color: #535bf2;
+    }
+  }
+
+  &.btn-info {
+    border-color: rgba(0, 0, 0, 0);
+    background-color: #ebebef;
+    color: rgb(60, 60, 67);
+    &:hover {
+      background-color: #cacaca;
+      border-color: rgba(0, 0, 0, 0);
+    }
+  }
+}
+
+// 比较大的按钮
+button.block,
+a.block {
+  --base-scale-size: 1;
+  display: block;
+  width: 400px;
+  border: 2px solid #99999967;
+  border-radius: 15px;
+  height: 100px;
+  margin: 5px auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: 'Punctuation SC', 'Inter', ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Noto Sans SC',
+    'Heiti SC', 'DengXian', 'Microsoft YaHei', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  text-align: center;
+  line-height: 100px;
+  transition: all 0.2s;
+  color: #ffffff;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #9999992c;
+    color: #ffffff;
+    transform: scale(calc(var(--base-scale-size) * 1.02));
+  }
+
+  &[status='active'] {
+    background-color: #747bff;
+    color: #ffffff;
+  }
+}
