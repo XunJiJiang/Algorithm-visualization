@@ -5,64 +5,40 @@ const codeNode = document.querySelector('#code-container') as HTMLElement;
 const canvasNode = document.querySelector('#canvas-container') as HTMLElement;
 
 function rootMenuNodeDisappear() {
-  rootMenuNode.style.transform = 'translate(0, 200px)';
-  setTimeout(() => {
-    (menuNode.childNodes[3] as HTMLParagraphElement).style.transform = 'translate(0, 200px)';
-  }, 70);
-  setTimeout(() => {
-    ((menuNode.childNodes[1] as HTMLTitleElement) || (menuNode.childNodes[0] as HTMLTitleElement)).style.transform =
-      'translate(0, 200px)';
-  }, 140);
-  setTimeout(() => {
-    menuNode.style.opacity = '0';
-  }, 20);
-  setTimeout(() => {
-    menuNode.style.height = 'none';
-  }, 1000);
+  menuNode.style.display = 'none';
 }
 
 function rootMenuNodeAppear() {
-  menuNode.style.height = '';
-  menuNode.style.opacity = '1';
-  setTimeout(() => {
-    (menuNode.childNodes[1] as HTMLTitleElement).style.transform = 'translate(0, 0)';
-    (menuNode.childNodes[3] as HTMLParagraphElement).style.transform = 'translate(0, 0)';
-    rootMenuNode.style.transform = 'translate(0, 0)';
-  }, 10);
+  menuNode.style.display = 'flex';
 }
 
 function codeMenuNodeDisappear() {
-  codeMenuNode.style.transform = 'translate(-100%, 0%)';
+  codeMenuNode.style.display = 'none';
 }
 
-codeMenuNodeDisappear();
-
 function codeMenuNodeAppear() {
-  codeMenuNode.style.transform = 'translate(0%, 0%)';
-  setTimeout(() => {
-    codeMenuNode.offsetHeight;
-  }, 1000);
+  codeMenuNode.style.display = 'block';
 }
 
 function codeNodeDisappear() {
-  // codeNode.style.transform = 'scale(0.5)';
-  // codeNode.style.opacity = '0';
+  codeNode.style.display = 'none';
 }
 
 function codeNodeAppear() {
-  // codeNode.style.transform = 'scale(1)';
-  // codeNode.style.opacity = '1';
+  codeNode.style.display = 'block';
 }
 
 function canvasNodeDisappear() {
-  // canvasNode.style.transform = 'scale(0.5)';
-  // canvasNode.style.opacity = '0';
+  canvasNode.style.display = 'none';
 }
 
 function canvasNodeAppear() {
-  // canvasNode.style.transform = 'scale(1)';
-  // canvasNode.style.opacity = '1';
+  canvasNode.style.display = 'block';
 }
+
+codeMenuNodeDisappear();
+codeNodeDisappear();
+canvasNodeDisappear();
 
 const interfaceControl = {
   rootMenuNodeDisappear,

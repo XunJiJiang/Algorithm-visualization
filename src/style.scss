@@ -65,3 +65,42 @@ body {
 ul {
   list-style: none;
 }
+
+/* 为整个页面设置滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+  background-color: #3d3d3d; /* 滑块颜色 */
+  border-radius: 6px; /* 滑块圆角 */
+  border: 3px solid #777777; /* 滑块周围的空白 */
+}
+
+/* 滚动条滑块悬停样式 */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* 滑块悬停颜色 */
+}
+
+/* 滚动条轨道 */
+::-webkit-scrollbar-track {
+  background-color: #ffffff00; /* 轨道颜色 */
+  border-radius: 0; /* 轨道圆角 */
+}
+
+/* 滚动条轨道内部可滚动的部分 */
+::-webkit-scrollbar-track-piece {
+  background-color: #ffffff00; /* 内部可滚动部分的颜色 */
+}
+
+/* 滚动条与边框的交角部分 */
+::-webkit-scrollbar-corner {
+  background-color: #ffffff00; /* 交角部分的颜色 */
+}
+
+/* 拖动调整大小的控件 */
+::-webkit-resizer {
+  background-color: #ffffff00; /* 调整大小控件的颜色 */
+}

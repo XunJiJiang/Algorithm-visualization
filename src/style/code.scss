@@ -1,0 +1,17 @@
+#code-container {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: calc(100% - 450px);
+  height: 60%;
+  background-color: #51c8ff5b;
+}
+
+#canvas-container {
+  position: absolute;
+  right: 0px;
+  top: 60%;
+  width: calc(100% - 450px);
+  height: 40%;
+  background-color: #77ff834f;
+}

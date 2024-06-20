@@ -20,6 +20,7 @@ function visible(diameter: number, hasTransition: boolean) {
   setTimeout(() => {
     loadingRound1.style.transition = hasTransition ? 'all 1s' : 'none';
     loadingRound1.style.animationName = 'scaleAnimation';
+    loadingContainer.style.opacity = '1';
     loadingRound3.style.setProperty('--diameter', `${diameter * 0.35}px`);
   }, 0);
   setTimeout(() => {
@@ -27,7 +28,6 @@ function visible(diameter: number, hasTransition: boolean) {
   }, 100);
   setTimeout(() => {
     loadingRound1.style.setProperty('--diameter', `${diameter * 0.8}px`);
-    loadingContainer.style.opacity = '1';
   }, 200);
 }
 
@@ -49,4 +49,14 @@ function invisible(diameter: number, hasTransition: boolean) {
   }, 1200);
 }
 
-export default loadingControl;
+function changePageInLoading(callback: () => void) {
+  loadingControl(true);
+  setTimeout(() => {
+    callback();
+  }, 1000);
+  setTimeout(() => {
+    loadingControl(false);
+  }, 1500);
+}
+
+export { loadingControl, changePageInLoading };
