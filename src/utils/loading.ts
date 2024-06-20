@@ -20,7 +20,7 @@ function visible(diameter: number, hasTransition: boolean) {
   setTimeout(() => {
     loadingRound1.style.transition = hasTransition ? 'all 1s' : 'none';
     loadingRound1.style.animationName = 'scaleAnimation';
-    loadingRound3.style.setProperty('--diameter', `${diameter * 0.4}px`);
+    loadingRound3.style.setProperty('--diameter', `${diameter * 0.35}px`);
   }, 0);
   setTimeout(() => {
     loadingRound2.style.setProperty('--diameter', `${diameter * 0.6}px`);
