@@ -1,13 +1,14 @@
 import './style.scss';
 import setRootMenuNode from './utils/root-menu.ts';
+import loadingControl from './utils/loading.ts';
 
-// document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-//   <div>
+setRootMenuNode();
 
-//   </div>
-// `;
+loadingControl(true);
 
-setRootMenuNode(document.querySelector<HTMLDivElement>('#root-menu')!);
+setTimeout(() => {
+  loadingControl(false);
+}, 2000);
 
 // Use contextBridge
 window.ipcRenderer.on('main-process-message', (_event, message) => {

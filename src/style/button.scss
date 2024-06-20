@@ -42,7 +42,7 @@ a.block {
   --base-scale-size: 1;
   display: block;
   width: 400px;
-  border: 2px solid #99999967;
+  border: 2px solid #99999910;
   border-radius: 15px;
   height: 100px;
   margin: 5px auto;
@@ -62,11 +62,16 @@ a.block {
   &:hover {
     background-color: #9999992c;
     color: #ffffff;
-    transform: scale(calc(var(--base-scale-size) * 1.02));
+    transform: scale(calc(var(--base-scale-size) * 1));
   }
 
   &[status='active'] {
     background-color: #747bff;
     color: #ffffff;
+  }
+
+  &.back {
+    height: 50px;
+    line-height: 50px;
   }
 }

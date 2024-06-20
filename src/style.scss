@@ -1,6 +1,7 @@
 @import url('./style/menu.scss');
 @import url('./style/button.scss');
 @import url('./style/code.scss');
+@import url('./style/loading.scss');
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -39,18 +40,25 @@ body {
 
 #drag-root {
   position: fixed;
-  height: 100%;
+  top: 0;
+  height: 30px;
   width: 100%;
   -webkit-user-select: none;
   user-select: none;
   -webkit-app-region: drag;
   overflow: hidden;
+  background-color: #2f3241;
+  z-index: 10000;
 }
 
 #app {
+  margin: 50px 0 0 0;
+  position: fixed;
   height: 100%;
   width: 100%;
-  position: relative;
+  -webkit-user-select: none;
+  user-select: none;
+  overflow: hidden;
   text-align: center;
 }
 

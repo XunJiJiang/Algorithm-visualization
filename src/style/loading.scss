@@ -1,0 +1,70 @@
+#loading-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #2f3241;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 1s;
+  z-index: 9999;
+  opacity: 1;
+  overflow: hidden;
+
+  & div {
+    transform: translate(-50%, -50%);
+    transform-origin: left top;
+    --diameter: 9999px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transition: inherit;
+    height: var(--diameter);
+    width: var(--diameter);
+    border-radius: 50%;
+    background-color: #464a5f;
+    animation: scaleAnimation 1s infinite;
+    animation-duration: 2.5s;
+    animation-timing-function: ease-in-out;
+    & div {
+      transform: inherit;
+      transform-origin: inherit;
+      border-radius: inherit;
+      transition: inherit;
+      background-color: #5c617c;
+      height: var(--diameter);
+      width: var(--diameter);
+      animation: inherit;
+      animation-duration: inherit;
+      animation-delay: -0.1s;
+      & div {
+        transform: inherit;
+        transform-origin: inherit;
+        --translate: '';
+        border-radius: inherit;
+        transition: inherit;
+        background-color: #727796;
+        height: var(--diameter);
+        width: var(--diameter);
+        animation: inherit;
+        animation-duration: inherit;
+        animation-delay: -0.2s;
+      }
+    }
+  }
+}
+
+// 连续缩放动画
+@keyframes scaleAnimation {
+  0% {
+    transform: scale(1) translate(-50%, -50%);
+  }
+  50% {
+    transform: scale(0.9) translate(-50%, -50%);
+  }
+  100% {
+    transform: scale(1) translate(-50%, -50%);
+  }
+}
