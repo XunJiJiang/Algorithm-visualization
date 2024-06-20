@@ -19,6 +19,7 @@ function visible(diameter: number, hasTransition: boolean) {
   loadingContainer.style.height = '';
   setTimeout(() => {
     loadingRound1.style.transition = hasTransition ? 'all 1s' : 'none';
+    loadingRound1.style.animationName = 'scaleAnimation';
     loadingRound3.style.setProperty('--diameter', `${diameter * 0.4}px`);
   }, 0);
   setTimeout(() => {
@@ -43,6 +44,7 @@ function invisible(diameter: number, hasTransition: boolean) {
   }, 200);
   setTimeout(() => {
     loadingRound1.style.transition = hasTransition ? 'all 1s' : 'none';
+    loadingRound1.style.animationName = 'none';
     loadingContainer.style.height = '0';
   }, 1200);
 }

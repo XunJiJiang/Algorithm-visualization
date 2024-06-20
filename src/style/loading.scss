@@ -20,7 +20,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transition: inherit;
+    transition: none;
     height: var(--diameter);
     width: var(--diameter);
     border-radius: 50%;
@@ -38,7 +38,7 @@
       width: var(--diameter);
       animation: inherit;
       animation-duration: inherit;
-      animation-delay: -0.1s;
+      animation-delay: -0.115s;
       & div {
         transform: inherit;
         transform-origin: inherit;
@@ -50,7 +50,7 @@
         width: var(--diameter);
         animation: inherit;
         animation-duration: inherit;
-        animation-delay: -0.2s;
+        animation-delay: -0.23s;
       }
     }
   }

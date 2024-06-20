@@ -24,7 +24,7 @@ function setRootMenuNode() {
     loadingControl(true);
     setTimeout(() => {
       loadingControl(false);
-    }, 3000);
+    }, 5000);
   });
 
   codeMenuNode.childNodes[1].childNodes[1].addEventListener('click', () => {
