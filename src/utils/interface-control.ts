@@ -3,13 +3,14 @@ const rootMenuNode = document.querySelector('#root-menu-container') as HTMLEleme
 const codeMenuNode = document.querySelector('#code-menu-container') as HTMLElement;
 const codeNode = document.querySelector('#code-container') as HTMLElement;
 const canvasNode = document.querySelector('#canvas-container') as HTMLElement;
+const controllerNode = document.querySelector('#controller') as HTMLElement;
 
 function rootMenuNodeDisappear() {
   menuNode.style.display = 'none';
 }
 
 function rootMenuNodeAppear() {
-  menuNode.style.display = 'flex';
+  menuNode.style.display = '';
 }
 
 function codeMenuNodeDisappear() {
@@ -17,7 +18,7 @@ function codeMenuNodeDisappear() {
 }
 
 function codeMenuNodeAppear() {
-  codeMenuNode.style.display = 'block';
+  codeMenuNode.style.display = '';
 }
 
 function codeNodeDisappear() {
@@ -25,7 +26,7 @@ function codeNodeDisappear() {
 }
 
 function codeNodeAppear() {
-  codeNode.style.display = 'block';
+  codeNode.style.display = '';
 }
 
 function canvasNodeDisappear() {
@@ -33,12 +34,32 @@ function canvasNodeDisappear() {
 }
 
 function canvasNodeAppear() {
-  canvasNode.style.display = 'block';
+  canvasNode.style.display = '';
+}
+
+function controllerNodeDisappear() {
+  controllerNode.style.display = 'none';
+}
+
+function controllerNodeAppear() {
+  controllerNode.style.display = '';
 }
 
 codeMenuNodeDisappear();
 codeNodeDisappear();
 canvasNodeDisappear();
+controllerNodeDisappear();
+
+// TODO: 开发时，用于快速启动代码页面的函数
+function openCodePage() {
+  codeMenuNodeAppear();
+  codeNodeAppear();
+  canvasNodeAppear();
+  rootMenuNodeDisappear();
+  controllerNodeAppear();
+}
+
+openCodePage();
 
 const interfaceControl = {
   rootMenuNodeDisappear,
@@ -49,6 +70,8 @@ const interfaceControl = {
   codeNodeAppear,
   canvasNodeDisappear,
   canvasNodeAppear,
+  controllerNodeDisappear,
+  controllerNodeAppear,
 };
 
 export default interfaceControl;
