@@ -1,6 +1,6 @@
 import './style.scss';
-import eventRun from './utils/root-menu.ts';
-import { loadingControl } from './utils/loading.ts';
+import eventRun from './utils/root-menu';
+import { loadingControl } from './utils/loading';
 
 eventRun();
 

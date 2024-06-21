@@ -2,6 +2,7 @@
 @import url('./style/button.scss');
 @import url('./style/code.scss');
 @import url('./style/loading.scss');
+@import url('./style/controller.scss');
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -19,7 +20,7 @@
 
   --button-black-width: 400px;
   --code-menu-width: calc(var(--button-black-width) + 50px);
-  --code-container-height: 30%;
+  --code-container-height: 40%;
 }
 
 a {

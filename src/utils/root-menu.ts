@@ -1,5 +1,6 @@
 import interfaceControl from './interface-control';
-import { loadingControl, changePageInLoading } from './loading.ts';
+import { loadingControl, changePageInLoading } from './loading';
+import { runBubbleSort, runMinimumSpanningTree } from './code';
 
 const menuNode = document.querySelector('#menu-container') as HTMLElement;
 const rootMenuNode = document.querySelector('#root-menu-container') as HTMLElement;
@@ -16,6 +17,7 @@ function eventRun() {
       interfaceControl.codeMenuNodeAppear();
       interfaceControl.codeNodeAppear();
       interfaceControl.canvasNodeAppear();
+      interfaceControl.controllerNodeAppear();
     });
   });
 
@@ -34,6 +36,7 @@ const codeMenuBack = document.querySelector('#code-menu-back') as HTMLElement;
 const codeNode = document.querySelector('#code-container') as HTMLElement;
 const codeDragBar = document.querySelector('#code-drag-bar') as HTMLElement;
 const canvasNode = document.querySelector('#canvas-container') as HTMLElement;
+const codeMenuItem = document.getElementsByClassName('code-menu-item') as unknown as HTMLDivElement[];
 
 function codePage() {
   const codeMenuDargBarHandler = (e: MouseEvent) => {
@@ -41,7 +44,7 @@ function codePage() {
     const x = e.clientX;
     const __width = parseFloat(codeMenuNode.style.getPropertyValue('--button-black-width')) || 400;
     const max = 600;
-    const min = 300;
+    const min = 200;
     let _width = __width;
     const mousemoveHandler = (e: MouseEvent) => {
       const moveX = e.clientX - x;
@@ -75,7 +78,6 @@ function codePage() {
     if (e.clientX < __codeMenuWidth + 56) {
       codeMenuDargBarHandler(e);
     }
-    console.log(e.clientX);
     codeDragBar.setAttribute('dragging', 'true');
     const y = e.clientY;
     const __height = parseFloat(codeNode.style.getPropertyValue('--code-container-height')) / 100 || 0.3;
@@ -115,8 +117,20 @@ function codePageButton() {
       interfaceControl.codeMenuNodeDisappear();
       interfaceControl.codeNodeDisappear();
       interfaceControl.canvasNodeDisappear();
+      interfaceControl.controllerNodeDisappear();
     });
   });
+
+  for (let i = 0; i < codeMenuItem.length; i++) {
+    codeMenuItem[i].addEventListener('click', () => {
+      console.log('click', codeMenuItem[i].innerHTML);
+      if (codeMenuItem[i].innerHTML === '冒泡排序') {
+        runBubbleSort();
+      } else if (codeMenuItem[i].innerHTML === '最小生成树问题') {
+        runMinimumSpanningTree();
+      }
+    });
+  }
 }
 
 export default eventRun;

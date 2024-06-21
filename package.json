@@ -19,6 +19,8 @@
   },
   "main": "dist-electron/main.js",
   "dependencies": {
-    "fabric": "^5.3.0"
+    "echarts": "^5.5.0",
+    "fabric": "^5.3.0",
+    "highlight.js": "^11.9.0"
   }
 }
