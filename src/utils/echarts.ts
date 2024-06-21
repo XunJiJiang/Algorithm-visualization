@@ -1,4 +1,5 @@
 import * as echarts from 'echarts';
+import { throttle } from './throttle';
 
 const chartDom = document.getElementById('canvas-container');
 export const chart = echarts.init(chartDom);
@@ -24,6 +25,9 @@ const option = {
 
 option && chart.setOption(option);
 
+export const resize = throttle(() => {
+  chart.resize();
+}, 500);
 
 export function createSort(arr: number[]) {
   chart.setOption({

@@ -1,5 +1,6 @@
 import interfaceControl from './interface-control';
 import { loadingControl, changePageInLoading } from './loading';
+import { resize } from './echarts';
 import { runBubbleSort, runMinimumSpanningTree } from './code';
 
 const menuNode = document.querySelector('#menu-container') as HTMLElement;
@@ -67,6 +68,7 @@ function codePage() {
         canvasNode.style.setProperty('--code-menu-width', `${max + 50}px`);
       }
       codeMenuDargBar.setAttribute('dragging', 'false');
+      resize();
     };
     document.addEventListener('mousemove', mousemoveHandler);
     document.addEventListener('mouseup', mouseupHandler);
@@ -103,6 +105,7 @@ function codePage() {
         codeNode.style.setProperty('--code-container-height', `${max * 100}%`);
         canvasNode.style.setProperty('--code-container-height', `${max * 100}%`);
       }
+      resize(resize);
       codeDragBar.setAttribute('dragging', 'false');
     };
     document.addEventListener('mousemove', mousemoveHandler);
@@ -132,5 +135,7 @@ function codePageButton() {
     });
   }
 }
+
+window.addEventListener('resize', resize);
 
 export default eventRun;
