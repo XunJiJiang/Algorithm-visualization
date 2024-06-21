@@ -84,12 +84,12 @@ function codePage() {
     const y = e.clientY;
     const __height = parseFloat(codeNode.style.getPropertyValue('--code-container-height')) / 100 || 0.3;
     const max = 0.7;
-    const min = 0.1;
+    const min = 0.2;
     let _height = __height;
     const mousemoveHandler = (e: MouseEvent) => {
       const moveY = e.clientY - y;
 
-      _height = __height + (moveY * 1.63) / window.innerWidth;
+      _height = __height + (moveY * 1) / window.innerHeight;
 
       codeNode.style.setProperty('--code-container-height', `${_height * 100}%`);
       canvasNode.style.setProperty('--code-container-height', `${_height * 100}%`);
@@ -105,7 +105,7 @@ function codePage() {
         codeNode.style.setProperty('--code-container-height', `${max * 100}%`);
         canvasNode.style.setProperty('--code-container-height', `${max * 100}%`);
       }
-      resize(resize);
+      resize();
       codeDragBar.setAttribute('dragging', 'false');
     };
     document.addEventListener('mousemove', mousemoveHandler);

@@ -4,6 +4,7 @@ import {
   runBubbleSortQueue,
   bubbleSortQueueControl,
 } from '../algorithm/bubble-sort';
+import { createPrimRaskQueue, getPrimCodeTree, primController } from '../algorithm/minimum-spanning-tree';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
 
@@ -115,7 +116,7 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
 
 export async function runBubbleSort() {
   const len = Math.floor(Math.random() * 10) + 5;
-  const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10));
+  const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10) + 1);
   await run(
     6,
     highlightBubbleSort,
@@ -124,3 +125,35 @@ export async function runBubbleSort() {
   );
 }
 
+type Edge = [number, number, number]; // [startVertexIndex, endVertexIndex, weight]
+
+const highlightPrim = highlight(getPrimCodeTree().join('\n'), {
+  language: 'javascript',
+}).value;
+
+export async function runMinimumSpanningTree() {
+  const verticesNum = Math.floor(Math.random() * 3) + 4;
+  // 通过asc2 码转换为字母，A-Z
+  const vertices = Array.from({ length: verticesNum }, (_, i) => String.fromCharCode(i + 65));
+  const edges: Edge[] = [];
+  // 生成全连接的图
+  Array.from({ length: verticesNum ** 2 }, (_, i) => {
+    const from = Math.floor(i / verticesNum);
+    const to = i % verticesNum;
+    if (from >= to) return null;
+    edges.push([from, to, Math.floor(Math.random() * 10)]);
+  });
+  // 在确保连通的情况下，随机删除一些边
+  const deleteNum = Math.floor(Math.random() * 3);
+  Array.from({ length: deleteNum }, () => {
+    const index = Math.floor(Math.random() * edges.length);
+    edges.splice(index, 1);
+  });
+
+  await run(
+    1,
+    highlightPrim,
+    createPrimRaskQueue.bind(null, edges, vertices, vertices[0]),
+    primController as unknown as Controller
+  );
+}
