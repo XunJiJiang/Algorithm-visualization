@@ -1,8 +1,8 @@
 import './style.scss';
-import setRootMenuNode from './utils/root-menu.ts';
+import eventRun from './utils/root-menu.ts';
 import { loadingControl } from './utils/loading.ts';
 
-setRootMenuNode();
+eventRun();
 
 loadingControl(true);
 

@@ -41,7 +41,7 @@ button.block,
 a.block {
   --base-scale-size: 1;
   display: block;
-  width: 400px;
+  width: var(--button-black-width);
   border: 2px solid #99999910;
   border-radius: 15px;
   height: 100px;
@@ -55,7 +55,7 @@ a.block {
     'Noto Color Emoji';
   text-align: center;
   line-height: 100px;
-  transition: all 0.2s;
+  transition: all 0.2s, width 0s;
   color: #ffffff;
   cursor: pointer;
 

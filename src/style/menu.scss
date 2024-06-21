@@ -76,4 +76,24 @@
       }
     }
   }
+
+  & #code-menu-drag-bar {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -6px;
+    width: 6px;
+    height: 100%;
+    z-index: 1;
+    cursor: e-resize;
+    transition: all 0.2s;
+
+    &:active {
+      background-color: #747bff;
+    }
+
+    &[dragging='true'] {
+      background-color: #747bff;
+    }
+  }
 }

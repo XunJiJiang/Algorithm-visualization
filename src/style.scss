@@ -16,6 +16,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --button-black-width: 400px;
+  --code-menu-width: calc(var(--button-black-width) + 50px);
+  --code-container-height: 30%;
 }
 
 a {
