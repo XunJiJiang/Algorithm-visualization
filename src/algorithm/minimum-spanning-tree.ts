@@ -144,8 +144,8 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
       if (min === null || edge[2] < min[2]) {
         taskQueue.push([
           5,
-          [nowEdges, vertices, 'A'],
-          async () => {
+          [deepClone(nowEdges), deepClone(vertices), 'A'],
+          async ([nowEdges]) => {
             graph.setEdges(nowEdges);
             await sleep(100);
           },
@@ -153,8 +153,8 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
         min = edge;
         taskQueue.push([
           5,
-          [nowEdges, vertices, 'A'],
-          async () => {
+          [deepClone(nowEdges), deepClone(vertices), 'A'],
+          async ([nowEdges]) => {
             graph.setEdges(nowEdges);
             await sleep(100);
           },
@@ -172,8 +172,8 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
         for (const obj of objs) {
           taskQueue.push([
             16,
-            [edgesBetweenSrcObj, vertices, src],
-            async () => {
+            [deepClone(edgesBetweenSrcObj), deepClone(vertices), src],
+            async ([edgesBetweenSrcObj]) => {
               graph.setEdges(edgesBetweenSrcObj);
               await sleep(100);
             },
@@ -181,8 +181,8 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
           const objIndex = vertices.indexOf(obj);
           taskQueue.push([
             18,
-            [edgesBetweenSrcObj, vertices, src],
-            async () => {
+            [deepClone(edgesBetweenSrcObj), deepClone(vertices), src],
+            async ([edgesBetweenSrcObj]) => {
               graph.setEdges(edgesBetweenSrcObj);
               await sleep(100);
             },
@@ -192,8 +192,8 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
             nowEdges = edgesBetweenSrcObj;
             taskQueue.push([
               19,
-              [edgesBetweenSrcObj, vertices, src],
-              async () => {
+              [deepClone(edgesBetweenSrcObj), deepClone(vertices), src],
+              async ([edgesBetweenSrcObj]) => {
                 graph.setEdges(edgesBetweenSrcObj);
                 await sleep(1000);
               },
@@ -212,32 +212,32 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
     let cur: Vertex = startVertex;
     taskQueue.push([
       27,
-      [mstree, vertices, startVertex],
-      async () => {
+      [deepClone(mstree), deepClone(vertices), startVertex],
+      async ([mstree]) => {
         graph.setEdges(mstree);
         await sleep(100);
       },
     ]);
     taskQueue.push([
       29,
-      [mstree, vertices, startVertex],
-      async () => {
+      [deepClone(mstree), deepClone(vertices), startVertex],
+      async ([mstree]) => {
         graph.setEdges(mstree);
         await sleep(100);
       },
     ]);
     taskQueue.push([
       29,
-      [mstree, vertices, startVertex],
-      async () => {
+      [deepClone(mstree), deepClone(vertices), startVertex],
+      async ([mstree]) => {
         graph.setEdges(mstree);
         await sleep(100);
       },
     ]);
     taskQueue.push([
       30,
-      [mstree, vertices, startVertex],
-      async () => {
+      [deepClone(mstree), deepClone(vertices), startVertex],
+      async ([mstree]) => {
         graph.setEdges(mstree);
         await sleep(100);
       },
@@ -246,8 +246,8 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
     while (remained.length > 1) {
       taskQueue.push([
         31,
-        [mstree, vertices, startVertex],
-        async () => {
+        [deepClone(mstree), deepClone(vertices), startVertex],
+        async ([mstree]) => {
           graph.setEdges(mstree);
           await sleep(100);
         },
@@ -255,8 +255,8 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
       infected.push(cur);
       taskQueue.push([
         32,
-        [mstree, vertices, startVertex],
-        async () => {
+        [deepClone(mstree), deepClone(vertices), startVertex],
+        async ([mstree]) => {
           graph.setEdges(mstree);
           await sleep(100);
         },
@@ -264,8 +264,8 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
       remained.splice(remained.indexOf(cur), 1);
       taskQueue.push([
         33,
-        [mstree, vertices, startVertex],
-        async () => {
+        [deepClone(mstree), deepClone(vertices), startVertex],
+        async ([mstree]) => {
           graph.setEdges(mstree);
           await sleep(100);
         },
@@ -273,16 +273,16 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
       let min: Edge | null = findMinEdge(findEdgesIn(infected, remained, edges, vertices));
       taskQueue.push([
         34,
-        [mstree, vertices, startVertex],
-        async () => {
+        [deepClone(mstree), deepClone(vertices), startVertex],
+        async ([mstree]) => {
           graph.setEdges(mstree);
           await sleep(100);
         },
       ]);
       taskQueue.push([
         35,
-        [mstree, vertices, startVertex],
-        async () => {
+        [deepClone(mstree), deepClone(vertices), startVertex],
+        async ([mstree]) => {
           graph.setEdges(mstree);
           await sleep(100);
         },
@@ -292,8 +292,8 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
       nowEdges = mstree;
       taskQueue.push([
         36,
-        [mstree, vertices, startVertex],
-        async () => {
+        [deepClone(mstree), deepClone(vertices), startVertex],
+        async ([mstree]) => {
           graph.setEdges(mstree);
           await sleep(1000);
         },
@@ -303,8 +303,8 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
 
     taskQueue.push([
       39,
-      [mstree, vertices, startVertex],
-      async () => {
+      [deepClone(mstree), deepClone(vertices), startVertex],
+      async ([mstree]) => {
         graph.setEdges(mstree);
         await sleep(1000);
       },
