@@ -6,6 +6,7 @@ import {
 } from '../algorithm/bubble-sort';
 import { createPrimRaskQueue, getPrimCodeTree, primController } from '../algorithm/minimum-spanning-tree';
 import hljs from 'highlight.js';
+import { throttle } from './throttle';
 import 'highlight.js/styles/atom-one-dark.css';
 
 const codeContainer = document.querySelector('#code-container') as HTMLElement;
@@ -15,9 +16,24 @@ const codeHighlightBar = document.querySelector('#code-highlight-bar') as HTMLEl
 const canvasContainer = document.querySelector('#canvas-container') as HTMLElement;
 const codeMenuItem = document.getElementsByClassName('code-menu-item') as unknown as HTMLDivElement[];
 
+export function back() {
+  codeContainer.style.setProperty('--beforeHeight', '100%');
+  canvasContainer.style.setProperty('--beforeTop', '0');
+  if (unbindControllerEvent) {
+    unbindControllerEvent();
+  }
+  if (nowController) {
+    nowController.pause();
+    isSomeRun = false;
+  }
+  setActiveMenuItem(0, true);
+}
+
 type Controller = {
   run: () => Promise<void>;
   pause: () => void;
+  prev: () => void;
+  next: () => void;
   goto: (index: number) => void;
   index: number;
   isRun: boolean;
@@ -44,7 +60,11 @@ let isSomeRun = false;
 
 let unbindControllerEvent: (() => void) | null = null;
 
+let nowController: Controller | null = null;
+
 const controllerNode = document.querySelector('#controller') as HTMLElement;
+const controllerPrev = document.querySelector('#controller-prev') as HTMLElement;
+const controllerNext = document.querySelector('#controller-next') as HTMLElement;
 const controllerSwitch = document.querySelector('#controller-switch') as HTMLElement;
 
 function controllerEvent(controller: Controller) {
@@ -57,12 +77,27 @@ function controllerEvent(controller: Controller) {
     isSomeRun = controller.isRun;
   };
 
+  controllerPrev.addEventListener('click', controller.prev);
+  controllerNext.addEventListener('click', controller.next);
   controllerSwitch.addEventListener('click', controllerSwitchHandler);
 
   return () => {
+    controllerPrev.removeEventListener('click', controller.prev);
+    controllerNext.removeEventListener('click', controller.next);
     controllerSwitch.removeEventListener('click', controllerSwitchHandler);
   };
 }
+
+window.addEventListener(
+  'resize',
+  throttle(() => {
+    const codeContainerWidth = parseFloat(getComputedStyle(codeContainer).width);
+    codeBlock.style.position = 'absolute';
+    const codeBlockWidth = parseFloat(getComputedStyle(codeBlock).width);
+    codeBlock.style.paddingLeft = `${codeContainerWidth / 2 - codeBlockWidth / 2}px`;
+    codeBlock.style.position = 'relative';
+  }, 500)
+);
 
 async function run(index: number, highlightCode: string, createRaskQueue: () => Promise<void>, controller: Controller) {
   if (isSomeRun) return;
@@ -70,6 +105,7 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
     unbindControllerEvent();
   }
   isSomeRun = true;
+  nowController = controller;
   setActiveMenuItem(index);
   const codeContainerWidth = parseFloat(getComputedStyle(codeContainer).width);
   await new Promise(resolve => {
@@ -77,7 +113,7 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
     canvasContainer.style.setProperty('--beforeTop', '0');
     setTimeout(async () => {
       codeBlock.innerHTML = highlightCode;
-      codeBlock.style.top = `${parseFloat(getComputedStyle(codeContainer).height) / 2 - 15}px`;
+      codeBlock.style.top = `${parseFloat(getComputedStyle(codeContainer).height) / 2 - 18}px`;
       createRaskQueue();
     }, 300);
     setTimeout(() => {
@@ -102,7 +138,7 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
     codeHighlightBar.style.opacity = '1';
     setActiveMenuItem(index);
     const codeContainerHeight = parseFloat(getComputedStyle(codeContainer).height);
-    codeBlock.style.top = `${-_index * 29.1 + codeContainerHeight / 2 - 16}px`;
+    codeBlock.style.top = `${-_index * 29.1 + codeContainerHeight / 2 - 18}px`;
     await callback();
     if (controller.index === controller.length - 1) {
       console.log('end');
@@ -149,11 +185,11 @@ export async function runMinimumSpanningTree() {
     edges.push([from, to, Math.floor(Math.random() * 10)]);
   });
   // 在确保连通的情况下，随机删除一些边
-  const deleteNum = Math.floor(Math.random() * 3);
-  Array.from({ length: deleteNum }, () => {
-    const index = Math.floor(Math.random() * edges.length);
-    edges.splice(index, 1);
-  });
+  // const deleteNum = Math.floor(Math.random() * 3);
+  // Array.from({ length: deleteNum }, () => {
+  //   const index = Math.floor(Math.random() * edges.length);
+  //   edges.splice(index, 1);
+  // });
 
   await run(
     1,

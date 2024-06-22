@@ -8,19 +8,23 @@ const baseOption = {
 };
 const option = {
   ...baseOption,
-  xAxis: {
-    type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-  },
-  yAxis: {
-    type: 'value',
-  },
-  series: [
-    {
-      data: [120, 200, 150, 80, 70, 110, 130],
-      type: 'bar',
+};
+
+export const init = () => {
+  chart.setOption({
+    animationDuration: 0,
+    xAxis: {
+      data: [''],
     },
-  ],
+    yAxis: {},
+    series: [
+      {
+        name: '销量',
+        type: 'bar',
+        data: [0],
+      },
+    ],
+  });
 };
 
 option && chart.setOption(option);
@@ -30,6 +34,8 @@ export const resize = throttle(() => {
 }, 500);
 
 export function createSort(arr: number[]) {
+  init();
+  resize();
   chart.setOption({
     ...baseOption,
     xAxis: {
@@ -63,6 +69,8 @@ export function createSort(arr: number[]) {
 }
 
 export function createGraph(edges: [number, number, number][], vertices: string[]) {
+  init();
+  resize();
   const data = vertices.map((v, i) => ({
     name: v,
     x: ((v.charCodeAt(0) - 65) % 3) * 100,
@@ -70,6 +78,10 @@ export function createGraph(edges: [number, number, number][], vertices: string[
   }));
   chart.setOption({
     ...baseOption,
+    xAxis: {
+      type: 'category',
+      show: false,
+    },
     series: [
       {
         type: 'graph',

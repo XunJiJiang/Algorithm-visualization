@@ -1,7 +1,7 @@
 import interfaceControl from './interface-control';
 import { loadingControl, changePageInLoading } from './loading';
 import { resize } from './echarts';
-import { runBubbleSort, runMinimumSpanningTree } from './code';
+import { back, runBubbleSort, runMinimumSpanningTree } from './code';
 
 const menuNode = document.querySelector('#menu-container') as HTMLElement;
 const rootMenuNode = document.querySelector('#root-menu-container') as HTMLElement;
@@ -121,6 +121,7 @@ function codePageButton() {
       interfaceControl.codeNodeDisappear();
       interfaceControl.canvasNodeDisappear();
       interfaceControl.controllerNodeDisappear();
+      back();
     });
   });
 

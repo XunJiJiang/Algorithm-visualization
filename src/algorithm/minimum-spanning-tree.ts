@@ -1,6 +1,10 @@
 import { createSort, createGraph } from '../utils/echarts';
 import { sleep } from '../utils/sleep';
 import { deepClone } from '../utils/deepClone';
+// @ts-ignore
+import Msg from '../components/message/index.js';
+// @ts-ignore
+import Noty from '../components/notification/index.js';
 
 type Edge = [number, number, number]; // [startVertexIndex, endVertexIndex, weight]
 type Vertex = string;
@@ -111,9 +115,56 @@ export const primController = {
     primController.isRun = false;
   },
   run: async () => {
+    if (primController.index < 0) {
+      primController.index = 0;
+    } else if (primController.index >= taskQueue.length) {
+      primController.index = taskQueue.length - 1;
+    }
     if (primController.isRun) return;
     primController.isRun = true;
     primController.runFunc && (await runPrimQueue(primController.runFunc));
+  },
+  prev: () => {
+    if (primController.index <= 0) {
+      primController.index = 0;
+      Msg.message({
+        message: '已经是第一步了',
+        type: 'warning',
+        duration: 500,
+      });
+      return;
+    }
+
+    primController.pause();
+    primController.index -= 2;
+    primController.runFunc &&
+      (primController.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+        taskQueue[primController.index][0],
+        async () => {
+          await taskQueue[primController.index][2](taskQueue[primController.index][1]);
+          primController.index++;
+        }
+      );
+  },
+  next: () => {
+    if (primController.index === taskQueue.length - 2) {
+      Msg.message({
+        message: '已经是最后一步了',
+        type: 'warning',
+        duration: 500,
+      });
+      return;
+    }
+
+    primController.pause();
+    primController.runFunc &&
+      (primController.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+        taskQueue[primController.index][0],
+        async () => {
+          await taskQueue[primController.index][2](taskQueue[primController.index][1]);
+          primController.index++;
+        }
+      );
   },
   goto: (index: number) => {
     primController.index = index;
@@ -133,8 +184,17 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
   primController.index = 0;
   primController.isRun = false;
   primController.length = taskQueue.length;
-  const graph = createGraph(edges, vertices);
+  const graph = createGraph(deepClone(edges), deepClone(vertices));
   await sleep(500);
+
+  taskQueue.push([
+    0,
+    [deepClone(edges), deepClone(vertices), 'A'],
+    async ([nowEdges]) => {
+      graph.setEdges(nowEdges);
+      await sleep(100);
+    },
+  ]);
 
   let nowEdges: Edge[] = [];
 
