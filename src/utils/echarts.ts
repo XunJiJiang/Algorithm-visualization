@@ -74,7 +74,7 @@ export function createGraph(edges: [number, number, number][], vertices: string[
   const data = vertices.map((v, i) => ({
     name: v,
     x: ((v.charCodeAt(0) - 65) % 3) * 100,
-    y: Math.floor((v.charCodeAt(0) - 65) / 3) * 50 + (i % 2 === 1 ? 25 : 0),
+    y: Math.floor((v.charCodeAt(0) - 65) / 3) * 50 + (i % 2 === 1 ? 17 : 0),
   }));
   chart.setOption({
     ...baseOption,
@@ -98,14 +98,15 @@ export function createGraph(edges: [number, number, number][], vertices: string[
         label: {
           show: true,
           fontSize: 20,
-          position: 'inside',
-          formatter: '{b}',
         },
         data,
         links: edges.map(([source, target, weight]) => ({
           source: vertices[source],
           target: vertices[target],
           weight,
+          label: {
+            show: true,
+          },
         })),
       },
     ],
@@ -117,31 +118,14 @@ export function createGraph(edges: [number, number, number][], vertices: string[
         ...baseOption,
         series: [
           {
-            type: 'graph',
-            layout: 'none',
-            symbolSize: 50,
-            symbolFontSize: 20,
-            font: 'bold 20px Microsoft YaHei',
-            edgeSymbol: ['none', 'none'],
-            edgeLabel: {
-              fontSize: 18,
-              formatter: function (params: any) {
-                console.log(params);
-                return params.data.weight;
-              },
-              color: '#ffffffcc',
-            },
-            label: {
-              show: true,
-              fontSize: 20,
-              position: 'inside',
-              formatter: '{b}',
-            },
             data,
             links: edges.map(([source, target, weight]) => ({
               source: vertices[source],
               target: vertices[target],
               weight,
+              label: {
+                show: true,
+              },
             })),
           },
         ],

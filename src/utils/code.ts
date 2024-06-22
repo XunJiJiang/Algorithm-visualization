@@ -8,6 +8,8 @@ import { createPrimRaskQueue, getPrimCodeTree, primController } from '../algorit
 import hljs from 'highlight.js';
 import { throttle } from './throttle';
 import 'highlight.js/styles/atom-one-dark.css';
+// @ts-ignore
+import Msg from '../components/message/index.js';
 
 const codeContainer = document.querySelector('#code-container') as HTMLElement;
 const preBlock = document.querySelector('#pre-block') as HTMLElement;
@@ -15,6 +17,11 @@ const codeBlock = document.querySelector('#code-block') as HTMLElement;
 const codeHighlightBar = document.querySelector('#code-highlight-bar') as HTMLElement;
 const canvasContainer = document.querySelector('#canvas-container') as HTMLElement;
 const codeMenuItem = document.getElementsByClassName('code-menu-item') as unknown as HTMLDivElement[];
+
+const controllerNode = document.querySelector('#controller') as HTMLElement;
+const controllerPrev = document.querySelector('#controller-prev') as HTMLElement;
+const controllerNext = document.querySelector('#controller-next') as HTMLElement;
+const controllerSwitch = document.querySelector('#controller-switch') as HTMLElement;
 
 export function back() {
   codeContainer.style.setProperty('--beforeHeight', '100%');
@@ -27,7 +34,18 @@ export function back() {
     isSomeRun = false;
   }
   setActiveMenuItem(0, true);
+  unbindControllerEvent = null;
+  nowController = null;
 }
+
+controllerNode.addEventListener('click', () => {
+  if (nowController) return;
+  Msg.message({
+    message: '请先选择一个算法',
+    type: 'warning',
+    duration: 500,
+  });
+});
 
 type Controller = {
   run: () => Promise<void>;
@@ -61,11 +79,6 @@ let isSomeRun = false;
 let unbindControllerEvent: (() => void) | null = null;
 
 let nowController: Controller | null = null;
-
-const controllerNode = document.querySelector('#controller') as HTMLElement;
-const controllerPrev = document.querySelector('#controller-prev') as HTMLElement;
-const controllerNext = document.querySelector('#controller-next') as HTMLElement;
-const controllerSwitch = document.querySelector('#controller-switch') as HTMLElement;
 
 function controllerEvent(controller: Controller) {
   const controllerSwitchHandler = () => {
