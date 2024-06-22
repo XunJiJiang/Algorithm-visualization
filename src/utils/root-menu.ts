@@ -82,7 +82,7 @@ function codePage() {
     }
     codeDragBar.setAttribute('dragging', 'true');
     const y = e.clientY;
-    const __height = parseFloat(codeNode.style.getPropertyValue('--code-container-height')) / 100 || 0.3;
+    const __height = parseFloat(codeNode.style.getPropertyValue('--code-container-height')) / 100 || 0.4;
     const max = 0.7;
     const min = 0.2;
     let _height = __height;

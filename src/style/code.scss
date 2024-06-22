@@ -5,7 +5,7 @@
   width: calc(100% - var(--code-menu-width));
   height: var(--code-container-height);
   --beforeHeight: 100%;
-  overflow: visible;
+  overflow: hidden;
 
   &::after {
     content: '';
@@ -51,6 +51,7 @@
   }
 
   & #pre-block {
+    height: 100%;
     & #code-block {
       text-align: left;
       font-family: 'Punctuation SC', 'Inter', ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC',
@@ -58,10 +59,10 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
       font-size: 18px;
       font-weight: 600;
-      position: absolute;
+      position: relative;
       top: 8px;
-      left: 50%;
-      transform: translate(-50%, 0);
+      left: 0%;
+      transform: translate(0, 0);
       margin: 0;
       transition: all 0.1s;
 

@@ -71,29 +71,34 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
   }
   isSomeRun = true;
   setActiveMenuItem(index);
+  const codeContainerWidth = parseFloat(getComputedStyle(codeContainer).width);
   await new Promise(resolve => {
     codeContainer.style.setProperty('--beforeHeight', '100%');
     canvasContainer.style.setProperty('--beforeTop', '0');
     setTimeout(async () => {
       codeBlock.innerHTML = highlightCode;
       codeBlock.style.top = `${parseFloat(getComputedStyle(codeContainer).height) / 2 - 15}px`;
+      createRaskQueue();
     }, 300);
     setTimeout(() => {
+      codeBlock.style.position = 'absolute';
+      const codeBlockWidth = parseFloat(getComputedStyle(codeBlock).width);
+      codeBlock.style.paddingLeft = `${codeContainerWidth / 2 - codeBlockWidth / 2}px`;
+      codeBlock.style.position = 'relative';
       codeContainer.style.setProperty('--beforeHeight', '0%');
       canvasContainer.style.setProperty('--beforeTop', '100%');
-      createRaskQueue();
     }, 700);
     setTimeout(() => {
       resolve(void 0);
     }, 1300);
   });
-  codeContainer.style.overflow = 'hidden';
+  preBlock.style.overflow = 'hidden';
   codeHighlightBar.style.opacity = '1';
 
   unbindControllerEvent = controllerEvent(controller);
 
   controller.runFunc = async (_index, callback) => {
-    codeContainer.style.overflow = 'hidden';
+    preBlock.style.overflow = 'hidden';
     codeHighlightBar.style.opacity = '1';
     setActiveMenuItem(index);
     const codeContainerHeight = parseFloat(getComputedStyle(codeContainer).height);
@@ -101,7 +106,7 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
     await callback();
     if (controller.index === controller.length - 1) {
       console.log('end');
-      codeContainer.style.overflow = 'auto';
+      preBlock.style.overflow = 'auto';
       codeHighlightBar.style.opacity = '0';
       codeBlock.style.top = '20px';
       setActiveMenuItem(index, true);
