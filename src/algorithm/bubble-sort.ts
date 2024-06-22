@@ -4,8 +4,6 @@ import { sleep } from '../utils/sleep';
 import { deepClone } from '../utils/deepClone';
 // @ts-ignore
 import Msg from '../components/message/index.js';
-// @ts-ignore
-import Noty from '../components/notification/index.js';
 
 const bubbleSortCode = [
   'function bubbleSort(arr) {',
@@ -26,15 +24,26 @@ const bubbleSortCode = [
 
 let taskQueue: [number, number[], (arr: number[]) => Promise<void>][] = [];
 
-export async function runBubbleSortQueue(callback: (index: number, callback: () => Promise<void>) => Promise<void>) {
+export async function runBubbleSortQueue(
+  /**
+   * @param index 当前执行到code的行位置
+   * @param callback 回调函数，任务包括数据任务队列下标指针的移动和执行任务队列中的任务
+   */
+  callback: (index: number, callback: () => Promise<void>) => Promise<void>
+) {
   for (let i = bubbleSortQueueControl.index; i < taskQueue.length; i++) {
     if (!bubbleSortQueueControl.isRun) return;
     await callback(taskQueue[i][0], async () => {
       bubbleSortQueueControl.index = i;
       await taskQueue[i][2](taskQueue[i][1]);
+      if (gotoTask) {
+        i = gotoTask();
+      }
     });
   }
 }
+
+let gotoTask: (() => number) | null = null;
 
 export const bubbleSortQueueControl = {
   pause: () => {
@@ -51,7 +60,7 @@ export const bubbleSortQueueControl = {
     bubbleSortQueueControl.runFunc && (await runBubbleSortQueue(bubbleSortQueueControl.runFunc));
   },
   prev: () => {
-    if (bubbleSortQueueControl.index < 0) {
+    if (bubbleSortQueueControl.index <= 0) {
       bubbleSortQueueControl.index = 0;
       Msg.message({
         message: '已经是第一步了',
@@ -63,6 +72,7 @@ export const bubbleSortQueueControl = {
 
     bubbleSortQueueControl.pause();
     bubbleSortQueueControl.index -= 2;
+    bubbleSortQueueControl.index = bubbleSortQueueControl.index < 0 ? 0 : bubbleSortQueueControl.index;
     bubbleSortQueueControl.runFunc &&
       (bubbleSortQueueControl.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
         taskQueue[bubbleSortQueueControl.index][0],
@@ -93,7 +103,11 @@ export const bubbleSortQueueControl = {
       );
   },
   goto: (index: number) => {
-    bubbleSortQueueControl.index = index;
+    bubbleSortQueueControl.run();
+    gotoTask = () => {
+      gotoTask = null;
+      return index;
+    };
   },
   index: 0,
   isRun: false,

@@ -19,6 +19,7 @@ export const init = () => {
     yAxis: {},
     series: [
       {
+        silent: true,
         name: '销量',
         type: 'bar',
         data: [0],
@@ -44,6 +45,7 @@ export function createSort(arr: number[]) {
     },
     series: [
       {
+        silent: true,
         data: arr,
         type: 'bar',
       },
@@ -59,6 +61,7 @@ export function createSort(arr: number[]) {
         },
         series: [
           {
+            silent: true,
             data: arr,
             type: 'bar',
           },
@@ -84,6 +87,7 @@ export function createGraph(edges: [number, number, number][], vertices: string[
     },
     series: [
       {
+        silent: true,
         type: 'graph',
         layout: 'none',
         symbolSize: 50,
@@ -119,6 +123,7 @@ export function createGraph(edges: [number, number, number][], vertices: string[
         series: [
           {
             data,
+            silent: true,
             links: edges.map(([source, target, weight]) => ({
               source: vertices[source],
               target: vertices[target],
@@ -130,6 +135,108 @@ export function createGraph(edges: [number, number, number][], vertices: string[
           },
         ],
       });
+    },
+  };
+}
+
+type ObjType = { [key: string]: number | string | BinaryTree | null };
+
+export interface BinaryTree extends ObjType {
+  val: number;
+  char: string;
+  left: BinaryTree | null;
+  right: BinaryTree | null;
+}
+
+type DataTree = {
+  name: string;
+  children: DataTree[];
+};
+
+function isBinaryTreeArray(val: unknown): val is BinaryTree[] {
+  return Array.isArray(val);
+}
+
+export function createBinaryTree(tree: BinaryTree | BinaryTree[]) {
+  init();
+  resize();
+  function createData<T extends BinaryTree | BinaryTree[]>(tree: T): DataTree | DataTree[] {
+    if (isBinaryTreeArray(tree)) {
+      const data: DataTree[] = [];
+      tree.forEach(t => {
+        data.push(createData(t) as DataTree);
+      });
+      return data as DataTree[];
+    } else {
+      const data: DataTree = {
+        name: `权重: ${tree.val} ${tree.char === '' ? '' : `字符: ${tree.char}`}`,
+        children: [],
+      };
+      if (tree.left) {
+        data.children.push(createData(tree.left) as DataTree);
+      }
+      if (tree.right) {
+        data.children.push(createData(tree.right) as DataTree);
+      }
+      return data;
+    }
+  }
+  const _data = createData(tree);
+
+  let data: DataTree | DataTree[] = _data;
+
+  if (isBinaryTreeArray(data)) {
+    data = {
+      name: 'root',
+      children: _data,
+    } as DataTree;
+  }
+
+  const _option = {
+    ...baseOption,
+    series: [
+      {
+        silent: true,
+        type: 'tree',
+        initialTreeDepth: 5,
+        data: [data],
+        left: '2%',
+        right: '2%',
+        top: '20%',
+        bottom: '20%',
+        symbol: 'emptyCircle',
+        symbolSize: 24,
+        orient: 'vertical',
+        expandAndCollapse: true,
+        label: {
+          position: 'bottom',
+          verticalAlign: 'middle',
+          rotate: -90,
+          align: 'right',
+          fontSize: 18,
+        },
+      },
+    ],
+  };
+
+  chart.setOption(_option);
+
+  return {
+    setTree: (tree: BinaryTree | BinaryTree[]) => {
+      if (!Array.isArray(tree) && tree.char === '__EMPTY_NODE__') return;
+      const _data = createData(tree);
+
+      let data: DataTree | DataTree[] = _data;
+
+      if (isBinaryTreeArray(data)) {
+        data = {
+          name: 'root',
+          children: _data,
+        } as DataTree;
+      }
+
+      _option.series[0].data = [data];
+      chart.setOption(_option);
     },
   };
 }

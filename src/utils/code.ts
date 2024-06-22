@@ -5,6 +5,7 @@ import {
   bubbleSortQueueControl,
 } from '../algorithm/bubble-sort';
 import { createPrimRaskQueue, getPrimCodeTree, primController } from '../algorithm/minimum-spanning-tree';
+import { createHuffmanTreeRaskQueue, huffmanTreeController, getHuffmanTreeCodeTree } from '../algorithm/huffman-tree';
 import hljs from 'highlight.js';
 import { throttle } from './throttle';
 import 'highlight.js/styles/atom-one-dark.css';
@@ -22,6 +23,7 @@ const controllerNode = document.querySelector('#controller') as HTMLElement;
 const controllerPrev = document.querySelector('#controller-prev') as HTMLElement;
 const controllerNext = document.querySelector('#controller-next') as HTMLElement;
 const controllerSwitch = document.querySelector('#controller-switch') as HTMLElement;
+const controllerProgressBar = document.querySelector('#controller-progress-bar') as HTMLElement;
 
 export function back() {
   codeContainer.style.setProperty('--beforeHeight', '100%');
@@ -90,14 +92,26 @@ function controllerEvent(controller: Controller) {
     isSomeRun = controller.isRun;
   };
 
+  const controllerProgressBarHandler = (e: MouseEvent) => {
+    // 记录点击位置距离进度条左边的距离
+    const x = e.clientX;
+    const rect = controllerProgressBar.getBoundingClientRect();
+    const width = rect.width;
+    const left = rect.left;
+    const percent = (x - left) / width;
+    controller.goto(Math.floor(percent * controller.length));
+  };
+
   controllerPrev.addEventListener('click', controller.prev);
   controllerNext.addEventListener('click', controller.next);
   controllerSwitch.addEventListener('click', controllerSwitchHandler);
+  controllerProgressBar.addEventListener('click', controllerProgressBarHandler);
 
   return () => {
     controllerPrev.removeEventListener('click', controller.prev);
     controllerNext.removeEventListener('click', controller.next);
     controllerSwitch.removeEventListener('click', controllerSwitchHandler);
+    controllerProgressBar.removeEventListener('click', controllerProgressBarHandler);
   };
 }
 
@@ -126,10 +140,11 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
     canvasContainer.style.setProperty('--beforeTop', '0');
     setTimeout(async () => {
       codeBlock.innerHTML = highlightCode;
-      codeBlock.style.top = `${parseFloat(getComputedStyle(codeContainer).height) / 2 - 18}px`;
+      codeBlock.style.top = `${parseFloat(getComputedStyle(codeContainer).height) / 2 - 15}px`;
       createRaskQueue();
     }, 300);
     setTimeout(() => {
+      controllerProgressBar.style.setProperty('--controller-progress-bar-width', '0%');
       codeBlock.style.position = 'absolute';
       const codeBlockWidth = parseFloat(getComputedStyle(codeBlock).width);
       codeBlock.style.paddingLeft = `${codeContainerWidth / 2 - codeBlockWidth / 2}px`;
@@ -149,12 +164,16 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
   controller.runFunc = async (_index, callback) => {
     preBlock.style.overflow = 'hidden';
     codeHighlightBar.style.opacity = '1';
+    controllerProgressBar.style.setProperty(
+      '--controller-progress-bar-width',
+      `${((controller.index + 1) / controller.length) * 100}%`
+    );
     setActiveMenuItem(index);
     const codeContainerHeight = parseFloat(getComputedStyle(codeContainer).height);
-    codeBlock.style.top = `${-_index * 29.1 + codeContainerHeight / 2 - 18}px`;
+    codeBlock.style.top = `${-_index * 29.217 + codeContainerHeight / 2 - 15}px`;
     await callback();
     if (controller.index === controller.length - 1) {
-      console.log('end');
+      controllerProgressBar.style.setProperty('--controller-progress-bar-width', '0%');
       preBlock.style.overflow = 'auto';
       codeHighlightBar.style.opacity = '0';
       codeBlock.style.top = '20px';
@@ -195,7 +214,7 @@ export async function runMinimumSpanningTree() {
     const from = Math.floor(i / verticesNum);
     const to = i % verticesNum;
     if (from >= to) return null;
-    edges.push([from, to, Math.floor(Math.random() * 10)]);
+    edges.push([from, to, Math.floor(Math.random() * 8) + 1]);
   });
   // 在确保连通的情况下，随机删除一些边
   // const deleteNum = Math.floor(Math.random() * 3);
@@ -209,5 +228,22 @@ export async function runMinimumSpanningTree() {
     highlightPrim,
     createPrimRaskQueue.bind(null, edges, vertices, vertices[0]),
     primController as unknown as Controller
+  );
+}
+
+const highlightHuffmanTree = highlight(getHuffmanTreeCodeTree(), {
+  language: 'javascript',
+}).value;
+
+export async function runHuffmanTree() {
+  const len = Math.floor(Math.random() * 10) + 22;
+  // 只生成A-H的字符串
+  const str = Array.from({ length: len }, () => String.fromCharCode(Math.floor(Math.random() * 8) + 65)).join('');
+
+  await run(
+    2,
+    highlightHuffmanTree,
+    createHuffmanTreeRaskQueue.bind(null, str),
+    huffmanTreeController as unknown as Controller
   );
 }

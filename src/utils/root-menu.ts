@@ -1,7 +1,7 @@
 import interfaceControl from './interface-control';
 import { loadingControl, changePageInLoading } from './loading';
 import { resize } from './echarts';
-import { back, runBubbleSort, runMinimumSpanningTree } from './code';
+import { back, runBubbleSort, runMinimumSpanningTree, runHuffmanTree } from './code';
 
 const menuNode = document.querySelector('#menu-container') as HTMLElement;
 const rootMenuNode = document.querySelector('#root-menu-container') as HTMLElement;
@@ -132,6 +132,8 @@ function codePageButton() {
         runBubbleSort();
       } else if (codeMenuItem[i].innerHTML === '最小生成树问题') {
         runMinimumSpanningTree();
+      } else if (codeMenuItem[i].innerHTML === '哈夫曼树构造问题') {
+        runHuffmanTree();
       }
     });
   }

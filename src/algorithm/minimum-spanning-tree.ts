@@ -106,9 +106,14 @@ export async function runPrimQueue(callback: (index: number, callback: () => Pro
     await callback(taskQueue[i][0], async () => {
       primController.index = i;
       await taskQueue[i][2](taskQueue[i][1]);
+      if (gotoTask) {
+        i = gotoTask();
+      }
     });
   }
 }
+
+let gotoTask: (() => number) | null = null;
 
 export const primController = {
   pause: () => {
@@ -137,6 +142,7 @@ export const primController = {
 
     primController.pause();
     primController.index -= 2;
+    primController.index = primController.index < 0 ? 0 : primController.index;
     primController.runFunc &&
       (primController.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
         taskQueue[primController.index][0],
@@ -167,7 +173,11 @@ export const primController = {
       );
   },
   goto: (index: number) => {
-    primController.index = index;
+    primController.run();
+    gotoTask = () => {
+      gotoTask = null;
+      return index;
+    };
   },
   index: 0,
   isRun: false,
