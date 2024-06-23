@@ -29,3 +29,37 @@ export default defineConfig({
     outDir: './build',
   },
 });
+
+/**
+ * 构建说明:
+ *  1. 在根目录 运行 npx tsc
+ *  2. 在根目录 运行 npx vite build
+ *  3. 将 build 文件夹下的内容拷贝到 dist-electron 文件夹下
+ *  4. 在 dist-electron 文件夹下 创建 package.json 文件
+ * ```
+ * {
+ *   "name": "algorithm-visualization",
+ *   "description": "An awesome project",
+ *   "author": "XunJiJiang",
+ *   "version": "0.0.1",
+ *   "type": "module",
+ *   "main": "main.js",
+ *   "build": {
+ *     "appId": "com.electrontest.av",
+ *     "productName": "algorithm-visualization",
+ *     "target": "NSIS",
+ *     "nsis": {
+ *       "allowToChangeInstallationDirectory": true,
+ *       "oneClick": false
+ *     },
+ *     "directories": {
+ *       "output": "../dist-app"
+ *     }
+ *   },
+ *   "devDependencies": {
+ *     "electron": "^31.0.2"
+ *   }
+ * }
+ * ```
+ *  5. 在 dist-electron 文件夹下 运行 electron-builder (需要全局安装 electron-builder)
+ */

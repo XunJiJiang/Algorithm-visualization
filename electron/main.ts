@@ -50,16 +50,12 @@ function createWindow() {
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
-    // win.loadFile('dist/index.html')
+    // win.loadFile('build/index.html')
     // TODO: 这里用绝对路径，不然会路径错误。怎么回事？
-    // win.loadFile(path.join(RENDERER_DIST, 'index.html'));
-    win.loadFile('build/index.html');
-    // win.loadFile(
-    //   'F:\\Users\\Documents\\MyDocument\\school\\programming\\Course-Design\\Second-half-of-sophomore-year\\code\\build\\index.html'
-    // );
+    win.loadFile('index.html');
   }
 
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
