@@ -51,6 +51,7 @@ let gotoTask: (() => number) | null = null;
 export class BubbleSortController implements CodeController {
   index = 0;
   isRun = false;
+
   run = async () => {
     if (this.index < 0) {
       this.index = 0;
@@ -61,9 +62,11 @@ export class BubbleSortController implements CodeController {
     this.isRun = true;
     this.runFunc && (await runBubbleSortQueue(this.runFunc, this));
   };
+
   pause = () => {
     this.isRun = false;
   };
+
   prev = () => {
     if (this.index <= 0) {
       this.index = 0;
@@ -87,6 +90,7 @@ export class BubbleSortController implements CodeController {
         }
       );
   };
+
   next = () => {
     if (this.index === taskQueue.length - 2) {
       Msg.message({
@@ -107,6 +111,7 @@ export class BubbleSortController implements CodeController {
         }
       );
   };
+  
   goto = (index: number) => {
     this.run();
     gotoTask = () => {

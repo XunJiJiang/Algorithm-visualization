@@ -1,7 +1,7 @@
 import interfaceControl from './interface-control';
 import { changePageInLoading } from './loading';
 import { resize } from './echarts';
-import { back, runBubbleSort, runMinimumSpanningTree, runHuffmanTree } from './code';
+import { back, runBubbleSort, runMinimumSpanningTree, runHuffmanTree, runTSP } from './code';
 
 // const menuNode = document.querySelector('#menu-container') as HTMLElement;
 // const rootMenuNode = document.querySelector('#root-menu-container') as HTMLElement;
@@ -134,6 +134,8 @@ function codePageButton() {
         runMinimumSpanningTree();
       } else if (codeMenuItem[i].innerHTML === '哈夫曼树构造问题') {
         runHuffmanTree();
+      } else if (codeMenuItem[i].innerHTML === '旅行商(TSP)问题') {
+        runTSP();
       }
     });
   }

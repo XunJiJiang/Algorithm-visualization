@@ -240,3 +240,74 @@ export function createBinaryTree(tree: BinaryTree | BinaryTree[]) {
     },
   };
 }
+
+type CoordinateMap = {
+  name: string;
+  x: number;
+  y: number;
+};
+
+export function createCoordinateMap(map: CoordinateMap[]) {
+  init();
+  resize();
+  // 运行次数, 每次加1
+  let runCount = 0;
+  const _option = {
+    ...baseOption,
+    animationDuration: 0,
+    title: {
+      text: `运行第${runCount}次`,
+      x: 'left',
+      y: 'top',
+    },
+    series: [
+      {
+        silent: true,
+        type: 'graph',
+        data: map,
+        layout: 'none',
+        symbolSize: 8,
+        edgeSymbol: ['none', 'none'],
+        label: {
+          show: true,
+          fontSize: 12,
+          formatter: function (params: any) {
+            return params.data.name.includes('起始点') ? '起始点' : '';
+          },
+        },
+        links: [] as {
+          source: string;
+          target: string;
+        }[],
+      },
+    ],
+  };
+
+  chart.setOption(_option);
+
+  return {
+    setLink: (
+      links: [
+        {
+          name: string;
+          x: number;
+          y: number;
+        },
+        {
+          name: string;
+          x: number;
+          y: number;
+        }
+      ][]
+    ) => {
+      runCount++;
+      _option.title.text = `运行第${runCount}次`;
+      _option.series[0].links = links.map(([source, target]) => ({
+        source: source.name,
+        target: target.name,
+      }));
+      chart.setOption(_option);
+    },
+  };
+}
+

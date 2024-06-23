@@ -8,4 +8,5 @@ export interface CodeController {
   isRun: boolean;
   length: number;
   runFunc: ((index: number, callback: () => Promise<void>) => Promise<void>) | null;
+  stop?: (() => void) | null;
 }
