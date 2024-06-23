@@ -1,4 +1,6 @@
 /** 冒泡排序 */
+import type { CodeController } from '../utils/code-controller';
+
 import { createSort } from '../utils/echarts';
 import { sleep } from '../utils/sleep';
 import { deepClone } from '../utils/deepClone';
@@ -29,12 +31,13 @@ async function runBubbleSortQueue(
    * @param index 当前执行到code的行位置
    * @param callback 回调函数，任务包括数据任务队列下标指针的移动和执行任务队列中的任务
    */
-  callback: (index: number, callback: () => Promise<void>) => Promise<void>
+  callback: (index: number, callback: () => Promise<void>) => Promise<void>,
+  controller: BubbleSortController
 ) {
-  for (let i = bubbleSortQueueControl.index; i < taskQueue.length; i++) {
-    if (!bubbleSortQueueControl.isRun) return;
+  for (let i = controller.index; i < taskQueue.length; i++) {
+    if (!controller.isRun) return;
     await callback(taskQueue[i][0], async () => {
-      bubbleSortQueueControl.index = i;
+      controller.index = i;
       await taskQueue[i][2](taskQueue[i][1]);
       if (gotoTask) {
         i = gotoTask();
@@ -45,23 +48,25 @@ async function runBubbleSortQueue(
 
 let gotoTask: (() => number) | null = null;
 
-export const bubbleSortQueueControl = {
-  pause: () => {
-    bubbleSortQueueControl.isRun = false;
-  },
-  run: async () => {
-    if (bubbleSortQueueControl.index < 0) {
-      bubbleSortQueueControl.index = 0;
-    } else if (bubbleSortQueueControl.index >= taskQueue.length) {
-      bubbleSortQueueControl.index = taskQueue.length - 1;
+export class BubbleSortController implements CodeController {
+  index = 0;
+  isRun = false;
+  run = async () => {
+    if (this.index < 0) {
+      this.index = 0;
+    } else if (this.index >= taskQueue.length) {
+      this.index = taskQueue.length - 1;
     }
-    if (bubbleSortQueueControl.isRun) return;
-    bubbleSortQueueControl.isRun = true;
-    bubbleSortQueueControl.runFunc && (await runBubbleSortQueue(bubbleSortQueueControl.runFunc));
-  },
-  prev: () => {
-    if (bubbleSortQueueControl.index <= 0) {
-      bubbleSortQueueControl.index = 0;
+    if (this.isRun) return;
+    this.isRun = true;
+    this.runFunc && (await runBubbleSortQueue(this.runFunc, this));
+  };
+  pause = () => {
+    this.isRun = false;
+  };
+  prev = () => {
+    if (this.index <= 0) {
+      this.index = 0;
       Msg.message({
         message: '已经是第一步了',
         type: 'warning',
@@ -70,20 +75,20 @@ export const bubbleSortQueueControl = {
       return;
     }
 
-    bubbleSortQueueControl.pause();
-    bubbleSortQueueControl.index -= 2;
-    bubbleSortQueueControl.index = bubbleSortQueueControl.index < 0 ? 0 : bubbleSortQueueControl.index;
-    bubbleSortQueueControl.runFunc &&
-      (bubbleSortQueueControl.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[bubbleSortQueueControl.index][0],
+    this.pause();
+    this.index -= 2;
+    this.index = this.index < 0 ? 0 : this.index;
+    this.runFunc &&
+      (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+        taskQueue[this.index][0],
         async () => {
-          await taskQueue[bubbleSortQueueControl.index][2](taskQueue[bubbleSortQueueControl.index][1]);
-          bubbleSortQueueControl.index++;
+          await taskQueue[this.index][2](taskQueue[this.index][1]);
+          this.index++;
         }
       );
-  },
-  next: () => {
-    if (bubbleSortQueueControl.index === taskQueue.length - 2) {
+  };
+  next = () => {
+    if (this.index === taskQueue.length - 2) {
       Msg.message({
         message: '已经是最后一步了',
         type: 'warning',
@@ -92,38 +97,36 @@ export const bubbleSortQueueControl = {
       return;
     }
 
-    bubbleSortQueueControl.pause();
-    bubbleSortQueueControl.runFunc &&
-      (bubbleSortQueueControl.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[bubbleSortQueueControl.index][0],
+    this.pause();
+    this.runFunc &&
+      (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+        taskQueue[this.index][0],
         async () => {
-          await taskQueue[bubbleSortQueueControl.index][2](taskQueue[bubbleSortQueueControl.index][1]);
-          bubbleSortQueueControl.index++;
+          await taskQueue[this.index][2](taskQueue[this.index][1]);
+          this.index++;
         }
       );
-  },
-  goto: (index: number) => {
-    bubbleSortQueueControl.run();
+  };
+  goto = (index: number) => {
+    this.run();
     gotoTask = () => {
       gotoTask = null;
       return index;
     };
-  },
-  index: 0,
-  isRun: false,
-  length: taskQueue.length,
-  runFunc: null,
-};
+  };
+  length = taskQueue.length;
+  runFunc = null;
+}
 
 export function getBubbleSortCodeTree() {
   return bubbleSortCode;
 }
 
-export async function createBubbleSortRaskQueue(_arr: number[]) {
+export async function createBubbleSortRaskQueue(_arr: number[], controller: BubbleSortController) {
   taskQueue = [];
-  bubbleSortQueueControl.index = 0;
-  bubbleSortQueueControl.isRun = false;
-  bubbleSortQueueControl.length = taskQueue.length;
+  controller.index = 0;
+  controller.length = taskQueue.length;
+  controller.isRun = false;
   const arr = deepClone(_arr);
   const sort = createSort(deepClone(arr));
   await sleep(500);
@@ -195,5 +198,5 @@ export async function createBubbleSortRaskQueue(_arr: number[]) {
 
   bubbleSort(arr);
 
-  bubbleSortQueueControl.length = taskQueue.length;
+  controller.length = taskQueue.length;
 }

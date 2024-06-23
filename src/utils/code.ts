@@ -1,6 +1,8 @@
-import { createBubbleSortRaskQueue, getBubbleSortCodeTree, bubbleSortQueueControl } from '../algorithm/bubble-sort';
-import { createPrimRaskQueue, getPrimCodeTree, primController } from '../algorithm/minimum-spanning-tree';
-import { createHuffmanTreeRaskQueue, huffmanTreeController, getHuffmanTreeCodeTree } from '../algorithm/huffman-tree';
+import type { CodeController } from './code-controller';
+
+import { createBubbleSortRaskQueue, getBubbleSortCodeTree, BubbleSortController } from '../algorithm/bubble-sort';
+import { createPrimRaskQueue, getPrimCodeTree, PrimController } from '../algorithm/minimum-spanning-tree';
+import { createHuffmanTreeRaskQueue, HuffmanTreeController, getHuffmanTreeCodeTree } from '../algorithm/huffman-tree';
 import hljs from 'highlight.js';
 import { throttle } from './throttle';
 import 'highlight.js/styles/atom-one-dark.css';
@@ -45,18 +47,6 @@ controllerNode.addEventListener('click', () => {
   });
 });
 
-type Controller = {
-  run: () => Promise<void>;
-  pause: () => void;
-  prev: () => void;
-  next: () => void;
-  goto: (index: number) => void;
-  index: number;
-  isRun: boolean;
-  length: number;
-  runFunc: ((index: number, callback: () => Promise<void>) => Promise<void>) | null;
-};
-
 function setActiveMenuItem(index: number, close = false) {
   for (let i = 0; i < codeMenuItem.length; i++) {
     codeMenuItem[i].setAttribute('status', 'false');
@@ -76,9 +66,9 @@ let isSomeRun = false;
 
 let unbindControllerEvent: (() => void) | null = null;
 
-let nowController: Controller | null = null;
+let nowController: CodeController | null = null;
 
-function controllerEvent(controller: Controller) {
+function controllerEvent(controller: CodeController) {
   const controllerSwitchHandler = () => {
     if (controller.isRun) {
       controller.pause();
@@ -123,7 +113,12 @@ window.addEventListener(
   }, 500)
 );
 
-async function run(index: number, highlightCode: string, createRaskQueue: () => Promise<void>, controller: Controller) {
+async function run(
+  index: number,
+  highlightCode: string,
+  createRaskQueue: () => Promise<void>,
+  controller: CodeController
+) {
   if (isSomeRun) return;
   if (unbindControllerEvent) {
     unbindControllerEvent();
@@ -191,11 +186,12 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
 export async function runBubbleSort() {
   const len = Math.floor(Math.random() * 10) + 5;
   const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10) + 1);
+  const _controller = new BubbleSortController();
   await run(
     6,
     highlightBubbleSort,
-    createBubbleSortRaskQueue.bind(null, arr),
-    bubbleSortQueueControl as unknown as Controller
+    createBubbleSortRaskQueue.bind(null, arr, _controller),
+    _controller as unknown as CodeController
   );
 }
 
@@ -223,16 +219,16 @@ export async function runMinimumSpanningTree() {
   //   const index = Math.floor(Math.random() * edges.length);
   //   edges.splice(index, 1);
   // });
-
+  const controller = new PrimController();
   await run(
     1,
     highlightPrim,
-    createPrimRaskQueue.bind(null, edges, vertices, vertices[0]),
-    primController as unknown as Controller
+    createPrimRaskQueue.bind(null, edges, vertices, vertices[0], controller),
+    controller as unknown as CodeController
   );
 }
 
-const highlightHuffmanTree = highlight(getHuffmanTreeCodeTree(), {
+const highlightHuffmanTree = highlight(getHuffmanTreeCodeTree().join('\n'), {
   language: 'javascript',
 }).value;
 
@@ -241,10 +237,11 @@ export async function runHuffmanTree() {
   // 只生成A-H的字符串
   const str = Array.from({ length: len }, () => String.fromCharCode(Math.floor(Math.random() * 8) + 65)).join('');
 
+  const controller = new HuffmanTreeController();
   await run(
     2,
     highlightHuffmanTree,
-    createHuffmanTreeRaskQueue.bind(null, str),
-    huffmanTreeController as unknown as Controller
+    createHuffmanTreeRaskQueue.bind(null, str, controller),
+    controller as unknown as CodeController
   );
 }

@@ -1,3 +1,6 @@
+/** 最小生成树 */
+import type { CodeController } from '../utils/code-controller';
+
 import { createGraph } from '../utils/echarts';
 import { sleep } from '../utils/sleep';
 import { deepClone } from '../utils/deepClone';
@@ -55,11 +58,14 @@ const code = [
 
 let taskQueue: [number, [Edge[], Vertex[], Vertex], (prop: [Edge[], Vertex[], Vertex]) => Promise<void>][] = [];
 
-async function runPrimQueue(callback: (index: number, callback: () => Promise<void>) => Promise<void>) {
-  for (let i = primController.index; i < taskQueue.length; i++) {
-    if (!primController.isRun) return;
+async function runPrimQueue(
+  callback: (index: number, callback: () => Promise<void>) => Promise<void>,
+  controller: PrimController
+) {
+  for (let i = controller.index; i < taskQueue.length; i++) {
+    if (!controller.isRun) return;
     await callback(taskQueue[i][0], async () => {
-      primController.index = i;
+      controller.index = i;
       await taskQueue[i][2](taskQueue[i][1]);
       if (gotoTask) {
         i = gotoTask();
@@ -70,23 +76,28 @@ async function runPrimQueue(callback: (index: number, callback: () => Promise<vo
 
 let gotoTask: (() => number) | null = null;
 
-export const primController = {
-  pause: () => {
-    primController.isRun = false;
-  },
-  run: async () => {
-    if (primController.index < 0) {
-      primController.index = 0;
-    } else if (primController.index >= taskQueue.length) {
-      primController.index = taskQueue.length - 1;
+export class PrimController implements CodeController {
+  index = 0;
+  isRun = false;
+
+  run = async () => {
+    if (this.index < 0) {
+      this.index = 0;
+    } else if (this.index >= taskQueue.length) {
+      this.index = taskQueue.length - 1;
     }
-    if (primController.isRun) return;
-    primController.isRun = true;
-    primController.runFunc && (await runPrimQueue(primController.runFunc));
-  },
-  prev: () => {
-    if (primController.index <= 0) {
-      primController.index = 0;
+    if (this.isRun) return;
+    this.isRun = true;
+    this.runFunc && (await runPrimQueue(this.runFunc, this));
+  };
+
+  pause = () => {
+    this.isRun = false;
+  };
+
+  prev = () => {
+    if (this.index <= 0) {
+      this.index = 0;
       Msg.message({
         message: '已经是第一步了',
         type: 'warning',
@@ -95,20 +106,21 @@ export const primController = {
       return;
     }
 
-    primController.pause();
-    primController.index -= 2;
-    primController.index = primController.index < 0 ? 0 : primController.index;
-    primController.runFunc &&
-      (primController.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[primController.index][0],
+    this.pause();
+    this.index -= 2;
+    this.index = this.index < 0 ? 0 : this.index;
+    this.runFunc &&
+      (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+        taskQueue[this.index][0],
         async () => {
-          await taskQueue[primController.index][2](taskQueue[primController.index][1]);
-          primController.index++;
+          await taskQueue[this.index][2](taskQueue[this.index][1]);
+          this.index++;
         }
       );
-  },
-  next: () => {
-    if (primController.index === taskQueue.length - 2) {
+  };
+
+  next = () => {
+    if (this.index === taskQueue.length - 2) {
       Msg.message({
         message: '已经是最后一步了',
         type: 'warning',
@@ -117,38 +129,42 @@ export const primController = {
       return;
     }
 
-    primController.pause();
-    primController.runFunc &&
-      (primController.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[primController.index][0],
+    this.pause();
+    this.runFunc &&
+      (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+        taskQueue[this.index][0],
         async () => {
-          await taskQueue[primController.index][2](taskQueue[primController.index][1]);
-          primController.index++;
+          await taskQueue[this.index][2](taskQueue[this.index][1]);
+          this.index++;
         }
       );
-  },
-  goto: (index: number) => {
-    primController.run();
+  };
+
+  goto = (index: number) => {
+    this.run();
     gotoTask = () => {
       gotoTask = null;
       return index;
     };
-  },
-  index: 0,
-  isRun: false,
-  length: taskQueue.length,
-  runFunc: null,
-};
+  };
+  length = taskQueue.length;
+  runFunc = null;
+}
 
 export function getPrimCodeTree() {
   return code;
 }
 
-export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], startVertex: Vertex) {
+export async function createPrimRaskQueue(
+  edges: Edge[],
+  vertices: Vertex[],
+  startVertex: Vertex,
+  controller: PrimController
+) {
   taskQueue = [];
-  primController.index = 0;
-  primController.isRun = false;
-  primController.length = taskQueue.length;
+  controller.index = 0;
+  controller.isRun = false;
+  controller.length = taskQueue.length;
   const graph = createGraph(deepClone(edges), deepClone(vertices));
   await sleep(500);
 
@@ -340,5 +356,5 @@ export async function createPrimRaskQueue(edges: Edge[], vertices: Vertex[], sta
 
   prim(edges, vertices, startVertex);
 
-  primController.length = taskQueue.length;
+  controller.length = taskQueue.length;
 }
