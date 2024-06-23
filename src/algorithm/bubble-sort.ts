@@ -80,12 +80,12 @@ export class BubbleSortController implements CodeController {
 
     this.pause();
     this.index -= 2;
-    this.index = this.index < 0 ? 0 : this.index;
+
     this.runFunc &&
       (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[this.index][0],
+        taskQueue[this.index < 0 ? 0 : this.index][0],
         async () => {
-          await taskQueue[this.index][2](taskQueue[this.index][1]);
+          await taskQueue[this.index < 0 ? 0 : this.index][2](taskQueue[this.index < 0 ? 0 : this.index][1]);
           this.index++;
         }
       );
@@ -111,7 +111,7 @@ export class BubbleSortController implements CodeController {
         }
       );
   };
-  
+
   goto = (index: number) => {
     this.run();
     gotoTask = () => {
@@ -127,7 +127,7 @@ export function getBubbleSortCodeTree() {
   return bubbleSortCode;
 }
 
-export async function createBubbleSortRaskQueue(_arr: number[], controller: BubbleSortController) {
+export async function createBubbleSortTaskQueue(_arr: number[], controller: BubbleSortController) {
   taskQueue = [];
   controller.index = 0;
   controller.length = taskQueue.length;

@@ -145,12 +145,12 @@ export class HuffmanTreeController implements CodeController {
 
     this.pause();
     this.index -= 2;
-    this.index = this.index < 0 ? 0 : this.index;
+
     this.runFunc &&
       (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[this.index][0],
+        taskQueue[this.index < 0 ? 0 : this.index][0],
         async () => {
-          await taskQueue[this.index][2](taskQueue[this.index][1]);
+          await taskQueue[this.index < 0 ? 0 : this.index][2](taskQueue[this.index < 0 ? 0 : this.index][1]);
           this.index++;
         }
       );
@@ -193,7 +193,7 @@ export function getHuffmanTreeCodeTree() {
   return huffmanTreeCode;
 }
 
-export async function createHuffmanTreeRaskQueue(str: string, controller: HuffmanTreeController) {
+export async function createHuffmanTreeTaskQueue(str: string, controller: HuffmanTreeController) {
   taskQueue = [];
   controller.index = 0;
   controller.isRun = false;

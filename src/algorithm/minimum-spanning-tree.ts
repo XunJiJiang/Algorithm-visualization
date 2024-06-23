@@ -108,12 +108,12 @@ export class PrimController implements CodeController {
 
     this.pause();
     this.index -= 2;
-    this.index = this.index < 0 ? 0 : this.index;
+
     this.runFunc &&
       (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[this.index][0],
+        taskQueue[this.index < 0 ? 0 : this.index][0],
         async () => {
-          await taskQueue[this.index][2](taskQueue[this.index][1]);
+          await taskQueue[this.index < 0 ? 0 : this.index][2](taskQueue[this.index < 0 ? 0 : this.index][1]);
           this.index++;
         }
       );
@@ -155,7 +155,7 @@ export function getPrimCodeTree() {
   return code;
 }
 
-export async function createPrimRaskQueue(
+export async function createPrimTaskQueue(
   edges: Edge[],
   vertices: Vertex[],
   startVertex: Vertex,

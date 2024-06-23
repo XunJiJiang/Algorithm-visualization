@@ -1,8 +1,9 @@
 import type { CodeController } from './code-controller';
 
-import { createBubbleSortRaskQueue, getBubbleSortCodeTree, BubbleSortController } from '../algorithm/bubble-sort';
-import { createPrimRaskQueue, getPrimCodeTree, PrimController } from '../algorithm/minimum-spanning-tree';
-import { createHuffmanTreeRaskQueue, HuffmanTreeController, getHuffmanTreeCodeTree } from '../algorithm/huffman-tree';
+import { createBubbleSortTaskQueue, getBubbleSortCodeTree, BubbleSortController } from '../algorithm/bubble-sort';
+import { createPrimTaskQueue, getPrimCodeTree, PrimController } from '../algorithm/minimum-spanning-tree';
+import { createHuffmanTreeTaskQueue, HuffmanTreeController, getHuffmanTreeCodeTree } from '../algorithm/huffman-tree';
+import { createGridCoverTaskQueue, GridCoverController, getGridCoverCodeTree } from '../algorithm/grid-cover';
 import { getTSPcode, createTSP, TSPController } from '../algorithm/TSP';
 import hljs from 'highlight.js';
 import { throttle } from './throttle';
@@ -58,10 +59,6 @@ function setActiveMenuItem(index: number, close = false) {
 }
 
 const { highlight } = hljs;
-
-const highlightBubbleSort = highlight(getBubbleSortCodeTree().join('\n'), {
-  language: 'javascript',
-}).value;
 
 let isSomeRun = false;
 
@@ -280,14 +277,18 @@ async function runMetaHeuristicAlgorithm(
   await controller.run();
 }
 
+const highlightBubbleSort = highlight(getBubbleSortCodeTree().join('\n'), {
+  language: 'javascript',
+}).value;
+
 export async function runBubbleSort() {
   const len = Math.floor(Math.random() * 10) + 5;
   const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10) + 1);
   const controller = new BubbleSortController();
   await runExactAlgorithm(
-    6,
+    0,
     highlightBubbleSort,
-    createBubbleSortRaskQueue.bind(null, arr, controller),
+    createBubbleSortTaskQueue.bind(null, arr, controller),
     controller as unknown as CodeController
   );
 }
@@ -320,7 +321,7 @@ export async function runMinimumSpanningTree() {
   await runExactAlgorithm(
     1,
     highlightPrim,
-    createPrimRaskQueue.bind(null, edges, vertices, vertices[0], controller),
+    createPrimTaskQueue.bind(null, edges, vertices, vertices[0], controller),
     controller as unknown as CodeController
   );
 }
@@ -338,7 +339,7 @@ export async function runHuffmanTree() {
   await runExactAlgorithm(
     2,
     highlightHuffmanTree,
-    createHuffmanTreeRaskQueue.bind(null, str, controller),
+    createHuffmanTreeTaskQueue.bind(null, str, controller),
     controller as unknown as CodeController
   );
 }
@@ -361,22 +362,29 @@ export async function runTSP() {
     y: Math.floor(Math.random() * 200),
   }));
 
-  // 邻接矩阵，表示城市之间的距离
-  // const distance: number[][] = [];
-
-  // for (let i = 0; i < len; i++) {
-  //   distance[i] = [];
-  //   for (let j = 0; j < len; j++) {
-  //     distance[i][j] = Math.sqrt((cities[i].x - cities[j].x) ** 2 + (cities[i].y - cities[j].y) ** 2);
-  //   }
-  // }
-
   const controller = new TSPController();
 
   await runMetaHeuristicAlgorithm(
     3,
     highlightTSP,
     createTSP.bind(null, cities, controller),
+    controller as unknown as CodeController
+  );
+}
+
+const highlightGridCover = highlight(getGridCoverCodeTree().join('\n'), {
+  language: 'javascript',
+}).value;
+
+export function runGridCover() {
+  const k = Math.floor(Math.random() * 4) + 2;
+  const row = Math.floor(Math.random() * 2 ** k) + 1;
+  const col = Math.floor(Math.random() * 2 ** k) + 1;
+  const controller = new GridCoverController();
+  runExactAlgorithm(
+    4,
+    highlightGridCover,
+    createGridCoverTaskQueue.bind(null, [k, row, col], controller),
     controller as unknown as CodeController
   );
 }

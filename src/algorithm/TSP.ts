@@ -2,7 +2,7 @@
 import type { CodeController } from '../utils/code-controller';
 
 import { createCoordinateMap } from '../utils/echarts';
-import { sleep } from '../utils/sleep';
+// import { sleep } from '../utils/sleep';
 // @ts-ignore
 import Msg from '../components/message/index.js';
 // @ts-ignore

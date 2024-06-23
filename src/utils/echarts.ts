@@ -1,8 +1,13 @@
 import * as echarts from 'echarts';
 import { throttle } from './throttle';
+import { randomColor } from './random-color';
 
 const chartDom = document.getElementById('canvas-container');
-export const chart = echarts.init(chartDom);
+let chart = echarts.init(chartDom);
+chartDom?.addEventListener('click', () => {
+  console.log(chart.getOption());
+});
+
 const baseOption = {
   animationDuration: 500,
 };
@@ -11,8 +16,13 @@ const option = {
 };
 
 export const init = () => {
+  // chart = echarts.init(chartDom);
+  chart.clear();
   chart.setOption({
     animationDuration: 0,
+    title: {
+      text: '',
+    },
     xAxis: {
       data: [''],
     },
@@ -252,6 +262,7 @@ export function createCoordinateMap(map: CoordinateMap[]) {
   resize();
   // 运行次数, 每次加1
   let runCount = 0;
+  console.log(map);
   const _option = {
     ...baseOption,
     animationDuration: 0,
@@ -311,3 +322,94 @@ export function createCoordinateMap(map: CoordinateMap[]) {
   };
 }
 
+// 为了可视化棋盘覆盖问题，为echarts注册2^2-2^6(边长)的自定义地图
+for (let power = 2; power <= 6; power++) {
+  const len = 2 ** power;
+  echarts.registerMap(
+    `grid-cover-2^${power}`,
+    {
+      type: 'FeatureCollection',
+      features: Array.from({ length: len * len }, (_, i) => {
+        // 当前点在整个棋盘中的位置
+        const x = i % len;
+        const y = Math.floor(i / len);
+
+        // 生成正方形，左上角为原点，顺时针生成五个点
+        const spots = [
+          [x, y],
+          [x + 1, y],
+          [x + 1, y + 1],
+          [x, y + 1],
+          [x, y],
+        ];
+
+        return {
+          type: 'Feature',
+          properties: {
+            name: `grid-cover-2^${power}-${x}-${y}`,
+          },
+          geometry: {
+            coordinates: [spots],
+            type: 'Polygon',
+          },
+        };
+      }),
+    },
+    {}
+  );
+}
+
+export function createGrip(power: number) {
+  init();
+  resize();
+  const len = 2 ** power;
+  // 总颜色数, 其中最后一项用于空位颜色, 第一项为特殊位置颜色
+  const colorNum = (len * len - 1) / 3 + 1 + 1;
+  const colors = Array.from({ length: colorNum }, () => randomColor(0x339999, 0xbbffff));
+  colors[0] = '#000000';
+  colors[colorNum - 1] = '#ffffff';
+  chart.setOption({
+    ...baseOption,
+    visualMap: {
+      show: false,
+      min: 0,
+      max: colorNum - 1,
+      calculable: false,
+      inRange: {
+        color: colors,
+      },
+    },
+    series: [
+      {
+        silent: true,
+        type: 'map',
+        map: `grid-cover-2^${power}`,
+        data: Array.from({ length: len * len }, (_, i) => ({
+          name: `grid-cover-2^${power}-${i % len}-${Math.floor(i / len)}`,
+          value: colorNum - 1,
+        })),
+      },
+    ],
+  });
+
+  return {
+    setGrip: (grip: number[][]) => {
+      chart.setOption({
+        series: [
+          {
+            silent: true,
+            type: 'map',
+            map: `grid-cover-2^${power}`,
+            mapType: `grid-cover-2^${power}`,
+            data: Array.from({ length: len * len }, (_, i) => {
+              return {
+                name: `grid-cover-2^${power}-${i % len}-${Math.floor(i / len)}`,
+                value: grip[Math.floor(i / len)][i % len] ?? colorNum - 1,
+              };
+            }),
+          },
+        ],
+      });
+    },
+  };
+}
