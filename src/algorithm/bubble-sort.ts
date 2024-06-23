@@ -24,7 +24,7 @@ const bubbleSortCode = [
 
 let taskQueue: [number, number[], (arr: number[]) => Promise<void>][] = [];
 
-export async function runBubbleSortQueue(
+async function runBubbleSortQueue(
   /**
    * @param index 当前执行到code的行位置
    * @param callback 回调函数，任务包括数据任务队列下标指针的移动和执行任务队列中的任务

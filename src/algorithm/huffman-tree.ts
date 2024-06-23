@@ -91,7 +91,7 @@ function addTask(
   taskQueue.push([index, deepClone(tree), callback]);
 }
 
-export async function runHuffmanTreeQueue(callback: (index: number, callback: () => Promise<void>) => Promise<void>) {
+async function runHuffmanTreeQueue(callback: (index: number, callback: () => Promise<void>) => Promise<void>) {
   for (let i = huffmanTreeController.index; i < taskQueue.length; i++) {
     if (!huffmanTreeController.isRun) return;
     await callback(taskQueue[i][0], async () => {

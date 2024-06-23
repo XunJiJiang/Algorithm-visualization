@@ -1,10 +1,10 @@
 import interfaceControl from './interface-control';
-import { loadingControl, changePageInLoading } from './loading';
+import { changePageInLoading } from './loading';
 import { resize } from './echarts';
 import { back, runBubbleSort, runMinimumSpanningTree, runHuffmanTree } from './code';
 
-const menuNode = document.querySelector('#menu-container') as HTMLElement;
-const rootMenuNode = document.querySelector('#root-menu-container') as HTMLElement;
+// const menuNode = document.querySelector('#menu-container') as HTMLElement;
+// const rootMenuNode = document.querySelector('#root-menu-container') as HTMLElement;
 const rootMenuNodeLi = document.getElementsByClassName('root-menu-container-li') as unknown as [
   HTMLLIElement,
   HTMLLIElement,
@@ -43,9 +43,9 @@ function codePage() {
   const codeMenuDargBarHandler = (e: MouseEvent) => {
     codeMenuDargBar.setAttribute('dragging', 'true');
     const x = e.clientX;
-    const __width = parseFloat(codeMenuNode.style.getPropertyValue('--button-black-width')) || 400;
+    const __width = parseFloat(codeMenuNode.style.getPropertyValue('--button-black-width')) || 180;
     const max = 600;
-    const min = 200;
+    const min = 120;
     let _width = __width;
     const mousemoveHandler = (e: MouseEvent) => {
       const moveX = e.clientX - x;

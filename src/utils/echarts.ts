@@ -90,10 +90,10 @@ export function createGraph(edges: [number, number, number][], vertices: string[
         silent: true,
         type: 'graph',
         layout: 'none',
-        symbolSize: 50,
+        symbolSize: 22,
         edgeSymbol: ['none', 'none'],
         edgeLabel: {
-          fontSize: 18,
+          fontSize: 14,
           formatter: function (params: any) {
             return params.data.weight;
           },
@@ -101,7 +101,7 @@ export function createGraph(edges: [number, number, number][], vertices: string[
         },
         label: {
           show: true,
-          fontSize: 20,
+          fontSize: 12,
         },
         data,
         links: edges.map(([source, target, weight]) => ({
@@ -205,7 +205,7 @@ export function createBinaryTree(tree: BinaryTree | BinaryTree[]) {
         top: '20%',
         bottom: '20%',
         symbol: 'emptyCircle',
-        symbolSize: 24,
+        symbolSize: 12,
         orient: 'vertical',
         expandAndCollapse: true,
         label: {
@@ -213,7 +213,7 @@ export function createBinaryTree(tree: BinaryTree | BinaryTree[]) {
           verticalAlign: 'middle',
           rotate: -90,
           align: 'right',
-          fontSize: 18,
+          fontSize: 12,
         },
       },
     ],

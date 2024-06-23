@@ -1,9 +1,7 @@
 import { app, BrowserWindow } from 'electron';
-import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
-const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // The built directory structure
@@ -20,7 +18,7 @@ process.env.APP_ROOT = path.join(__dirname, '..');
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL'];
 export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron');
-export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist');
+export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'build');
 
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST;
 
@@ -28,10 +26,10 @@ let win: BrowserWindow | null;
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 1500,
-    minWidth: 1500,
-    height: 800,
-    minHeight: 800,
+    width: 1024,
+    minWidth: 880,
+    height: 600,
+    minHeight: 400,
     titleBarStyle: 'hidden',
     titleBarOverlay: {
       color: '#2f3241',
@@ -53,7 +51,12 @@ function createWindow() {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
     // win.loadFile('dist/index.html')
-    win.loadFile(path.join(RENDERER_DIST, 'index.html'));
+    // TODO: 这里用绝对路径，不然会路径错误。怎么回事？
+    // win.loadFile(path.join(RENDERER_DIST, 'index.html'));
+    win.loadFile('build/index.html');
+    // win.loadFile(
+    //   'F:\\Users\\Documents\\MyDocument\\school\\programming\\Course-Design\\Second-half-of-sophomore-year\\code\\build\\index.html'
+    // );
   }
 
   win.webContents.openDevTools();

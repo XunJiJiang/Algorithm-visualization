@@ -1,5 +1,5 @@
 const menuNode = document.querySelector('#menu-container') as HTMLElement;
-const rootMenuNode = document.querySelector('#root-menu-container') as HTMLElement;
+// const rootMenuNode = document.querySelector('#root-menu-container') as HTMLElement;
 const codeMenuNode = document.querySelector('#code-menu-container') as HTMLElement;
 const codeNode = document.querySelector('#code-container') as HTMLElement;
 const canvasNode = document.querySelector('#canvas-container') as HTMLElement;
@@ -51,15 +51,15 @@ canvasNodeDisappear();
 controllerNodeDisappear();
 
 // TODO: 开发时，用于快速启动代码页面的函数
-function openCodePage() {
-  codeMenuNodeAppear();
-  codeNodeAppear();
-  canvasNodeAppear();
-  rootMenuNodeDisappear();
-  controllerNodeAppear();
-}
+// function openCodePage() {
+//   codeMenuNodeAppear();
+//   codeNodeAppear();
+//   canvasNodeAppear();
+//   rootMenuNodeDisappear();
+//   controllerNodeAppear();
+// }
 
-openCodePage();
+// openCodePage();
 
 const interfaceControl = {
   rootMenuNodeDisappear,

@@ -1,5 +1,7 @@
 {
   "name": "algorithm-visualization",
+  "description": "An awesome project",
+  "author": "XunJiJiang",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -23,5 +25,17 @@
     "fabric": "^5.3.0",
     "highlight.js": "^11.9.0",
     "uuid": "^10.0.0"
+  },
+  "build": {
+    "appId": "com.electrontest.av",
+    "productName": "algorithm-visualization",
+    "target": "NSIS",
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    },
+    "directories": {
+      "output": "dist-app"
+    }
   }
 }

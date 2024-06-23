@@ -1,9 +1,4 @@
-import {
-  createBubbleSortRaskQueue,
-  getBubbleSortCodeTree,
-  runBubbleSortQueue,
-  bubbleSortQueueControl,
-} from '../algorithm/bubble-sort';
+import { createBubbleSortRaskQueue, getBubbleSortCodeTree, bubbleSortQueueControl } from '../algorithm/bubble-sort';
 import { createPrimRaskQueue, getPrimCodeTree, primController } from '../algorithm/minimum-spanning-tree';
 import { createHuffmanTreeRaskQueue, huffmanTreeController, getHuffmanTreeCodeTree } from '../algorithm/huffman-tree';
 import hljs from 'highlight.js';
@@ -34,6 +29,7 @@ export function back() {
   if (nowController) {
     nowController.pause();
     isSomeRun = false;
+    controllerSwitch.innerHTML = '播放';
   }
   setActiveMenuItem(0, true);
   unbindControllerEvent = null;
@@ -90,6 +86,7 @@ function controllerEvent(controller: Controller) {
       controller.run();
     }
     isSomeRun = controller.isRun;
+    controllerSwitch.innerHTML = controller.isRun ? '暂停' : '播放';
   };
 
   const controllerProgressBarHandler = (e: MouseEvent) => {
@@ -132,6 +129,7 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
     unbindControllerEvent();
   }
   isSomeRun = true;
+  controllerSwitch.innerHTML = '暂停';
   nowController = controller;
   setActiveMenuItem(index);
   const codeContainerWidth = parseFloat(getComputedStyle(codeContainer).width);
@@ -140,7 +138,7 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
     canvasContainer.style.setProperty('--beforeTop', '0');
     setTimeout(async () => {
       codeBlock.innerHTML = highlightCode;
-      codeBlock.style.top = `${parseFloat(getComputedStyle(codeContainer).height) / 2 - 15}px`;
+      codeBlock.style.top = `${parseFloat(getComputedStyle(codeContainer).height) / 2 - 10}px`;
       createRaskQueue();
     }, 300);
     setTimeout(() => {
@@ -170,8 +168,10 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
     );
     setActiveMenuItem(index);
     const codeContainerHeight = parseFloat(getComputedStyle(codeContainer).height);
-    codeBlock.style.top = `${-_index * 29.217 + codeContainerHeight / 2 - 15}px`;
+    codeBlock.style.top = `${-_index * 22 + codeContainerHeight / 2 - 10}px`;
     await callback();
+    isSomeRun = controller.isRun;
+    controllerSwitch.innerHTML = controller.isRun ? '暂停' : '播放';
     if (controller.index === controller.length - 1) {
       controllerProgressBar.style.setProperty('--controller-progress-bar-width', '0%');
       preBlock.style.overflow = 'auto';
@@ -179,6 +179,7 @@ async function run(index: number, highlightCode: string, createRaskQueue: () => 
       codeBlock.style.top = '20px';
       setActiveMenuItem(index, true);
       isSomeRun = false;
+      controllerSwitch.innerHTML = '播放';
       controller.index = 0;
       controller.isRun = false;
     }

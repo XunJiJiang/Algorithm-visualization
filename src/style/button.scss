@@ -44,17 +44,17 @@ a.block {
   width: var(--button-black-width);
   border: 2px solid #99999910;
   border-radius: 15px;
-  height: 100px;
+  height: 50px;
   margin: 5px auto;
   margin-top: 10px;
   margin-bottom: 10px;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   font-family: 'Punctuation SC', 'Inter', ui-sans-serif, system-ui, 'PingFang SC', 'Noto Sans CJK SC', 'Noto Sans SC',
     'Heiti SC', 'DengXian', 'Microsoft YaHei', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
   text-align: center;
-  line-height: 100px;
+  line-height: 50px;
   transition: all 0.2s, width 0s;
   color: #ffffff;
   cursor: pointer;
