@@ -95,11 +95,15 @@ export class SortController implements CodeController {
     }
     if (this.isRun) return;
     this.isRun = true;
-    this.runFunc && (await runBubbleSortQueue(this.runFunc, this));
+    await runBubbleSortQueue(this.runFunc, this);
   };
 
-  pause = () => {
+  pause = (runStop = true) => {
     this.isRun = false;
+
+    if (runStop) {
+      this.stop();
+    }
   };
 
   prev = () => {
@@ -113,17 +117,16 @@ export class SortController implements CodeController {
       return;
     }
 
-    this.pause();
+    this.pause(false);
     this.index -= 2;
 
-    this.runFunc &&
-      (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[this.index < 0 ? 0 : this.index][0],
-        async () => {
-          await taskQueue[this.index < 0 ? 0 : this.index][2](taskQueue[this.index < 0 ? 0 : this.index][1]);
-          this.index++;
-        }
-      );
+    (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+      taskQueue[this.index < 0 ? 0 : this.index][0],
+      async () => {
+        await taskQueue[this.index < 0 ? 0 : this.index][2](taskQueue[this.index < 0 ? 0 : this.index][1]);
+        this.index++;
+      }
+    );
   };
 
   next = () => {
@@ -136,15 +139,14 @@ export class SortController implements CodeController {
       return;
     }
 
-    this.pause();
-    this.runFunc &&
-      (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[this.index][0],
-        async () => {
-          await taskQueue[this.index][2](taskQueue[this.index][1]);
-          this.index++;
-        }
-      );
+    this.pause(false);
+    (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+      taskQueue[this.index][0],
+      async () => {
+        await taskQueue[this.index][2](taskQueue[this.index][1]);
+        this.index++;
+      }
+    );
   };
 
   goto = (index: number) => {
@@ -155,7 +157,8 @@ export class SortController implements CodeController {
     };
   };
   length = taskQueue.length;
-  runFunc = null;
+  runFunc = async () => {};
+  stop = () => {};
 }
 
 export async function createBubbleSortTaskQueue(_arr: number[], controller: SortController) {
@@ -283,20 +286,18 @@ export async function createQuickSortTaskQueue(_arr: number[], controller: SortC
         --high;
         taskQueue.push([
           4,
-          deepClone(arr),
-          async arr => {
-            sort.setArr(arr);
-            await sleep(500);
+          [],
+          async () => {
+            await sleep(100);
           },
         ]);
       }
       arr[low] = arr[high];
       taskQueue.push([
         6,
-        deepClone(arr),
-        async arr => {
-          sort.setArr(arr);
-          await sleep(500);
+        [],
+        async () => {
+          await sleep(100);
         },
       ]);
       while (low < high && arr[low] <= pivot) {

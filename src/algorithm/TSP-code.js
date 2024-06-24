@@ -138,7 +138,6 @@ class GA {
     }
     this.lives = new_lives;
 
-    //console.log(this.best.score)
     return this.best?.gene.slice(0);
   }
 }
@@ -304,7 +303,6 @@ export function runTspCode(nodes, runTSPTask, tspDraw) {
 
       // lines
       this.orders.concat(this.orders[0]).reduce((a, b) => {
-        //console.log(a, '->', b)
         let na = nodes[a];
         let nb = nodes[b];
         pathList.push([na, nb]);

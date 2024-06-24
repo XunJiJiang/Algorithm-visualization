@@ -117,7 +117,7 @@ window.addEventListener(
   }, 500)
 );
 
-// 是否正在切换算法
+/** 是否正在切换算法 */
 let isSwitch = false;
 
 /**
@@ -183,9 +183,20 @@ export async function runExactAlgorithm(
 
   unbindControllerEvent = controllerEvent(controller);
 
+  controller.stop = () => {
+    preBlock.style.overflow = 'auto';
+    codeHighlightBar.style.opacity = '0';
+    codeBlock.style.top = '20px';
+    setActiveMenuItem(index, true);
+    // isSomeRun = false;
+    controllerSwitch.innerHTML = '播放';
+    controller.isRun = false;
+  };
+
   controller.runFunc = async (_index, callback) => {
     preBlock.style.overflow = 'hidden';
     codeHighlightBar.style.opacity = '1';
+    preBlock.scrollTop = 0;
     controllerProgressBar.style.setProperty(
       '--controller-progress-bar-width',
       `${((controller.index + 1) / controller.length) * 100}%`
@@ -198,14 +209,8 @@ export async function runExactAlgorithm(
     controllerSwitch.innerHTML = controller.isRun ? '暂停' : '播放';
     if (controller.index === controller.length - 1) {
       controllerProgressBar.style.setProperty('--controller-progress-bar-width', '0%');
-      preBlock.style.overflow = 'auto';
-      codeHighlightBar.style.opacity = '0';
-      codeBlock.style.top = '20px';
-      setActiveMenuItem(index, true);
-      // isSomeRun = false;
-      controllerSwitch.innerHTML = '播放';
       controller.index = 0;
-      controller.isRun = false;
+      controller.stop();
     }
   };
 

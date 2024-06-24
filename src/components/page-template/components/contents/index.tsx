@@ -77,7 +77,7 @@ const ContentsINPage = forwardRef(function _ContentsINPage(
                   const id = content.id;
                   const node = content.node;
                   if (id && node) {
-                    node.scrollIntoView({ behavior: 'smooth' });
+                    node.scrollIntoView();
                   } else {
                     console.warn('目录项对应的节点不存在');
                   }

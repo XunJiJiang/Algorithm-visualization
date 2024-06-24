@@ -4,7 +4,7 @@ import type { ContentType } from '../../types/comp-markdown.d.ts';
 import { useId } from 'react';
 import { createId } from '../../utils/index.ts';
 
-export function H1({ className = '', children = '', setContents, ...props }: TitleProps) {
+export function H1({ className = '', children = '', setContents }: TitleProps) {
   const id = createId(children) + useId();
   const content: ContentNodeNullType = {
     id,
@@ -19,7 +19,6 @@ export function H1({ className = '', children = '', setContents, ...props }: Tit
         content.node = node;
         setContents(content as ContentType);
       }}
-      {...props}
       id={content.id}
       className={`markdown-h1 ${className ?? ''}`}
     >
@@ -28,7 +27,7 @@ export function H1({ className = '', children = '', setContents, ...props }: Tit
   );
 }
 
-export function H2({ className, children = '', setContents, ...props }: TitleProps) {
+export function H2({ className, children = '', setContents }: TitleProps) {
   const id = createId(children) + useId();
   const content: ContentNodeNullType = {
     id,
@@ -43,7 +42,6 @@ export function H2({ className, children = '', setContents, ...props }: TitlePro
         content.node = node;
         setContents(content as ContentType);
       }}
-      {...props}
       id={content.id}
       className={`markdown-h2 ${className ?? ''}`}
     >
@@ -52,7 +50,7 @@ export function H2({ className, children = '', setContents, ...props }: TitlePro
   );
 }
 
-export function H3({ className, children = '', setContents, ...props }: TitleProps) {
+export function H3({ className, children = '', setContents }: TitleProps) {
   const id = createId(children) + useId();
   const content: ContentNodeNullType = {
     id,
@@ -67,7 +65,6 @@ export function H3({ className, children = '', setContents, ...props }: TitlePro
         content.node = node;
         setContents(content as ContentType);
       }}
-      {...props}
       id={content.id}
       className={`markdown-h3 ${className ?? ''}`}
     >

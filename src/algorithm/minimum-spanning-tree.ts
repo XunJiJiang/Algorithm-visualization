@@ -88,11 +88,15 @@ export class PrimController implements CodeController {
     }
     if (this.isRun) return;
     this.isRun = true;
-    this.runFunc && (await runPrimQueue(this.runFunc, this));
+    await runPrimQueue(this.runFunc, this);
   };
 
-  pause = () => {
+  pause = (runStop = true) => {
     this.isRun = false;
+
+    if (runStop) {
+      this.stop();
+    }
   };
 
   prev = () => {
@@ -106,17 +110,16 @@ export class PrimController implements CodeController {
       return;
     }
 
-    this.pause();
+    this.pause(false);
     this.index -= 2;
 
-    this.runFunc &&
-      (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[this.index < 0 ? 0 : this.index][0],
-        async () => {
-          await taskQueue[this.index < 0 ? 0 : this.index][2](taskQueue[this.index < 0 ? 0 : this.index][1]);
-          this.index++;
-        }
-      );
+    (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+      taskQueue[this.index < 0 ? 0 : this.index][0],
+      async () => {
+        await taskQueue[this.index < 0 ? 0 : this.index][2](taskQueue[this.index < 0 ? 0 : this.index][1]);
+        this.index++;
+      }
+    );
   };
 
   next = () => {
@@ -129,15 +132,14 @@ export class PrimController implements CodeController {
       return;
     }
 
-    this.pause();
-    this.runFunc &&
-      (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[this.index][0],
-        async () => {
-          await taskQueue[this.index][2](taskQueue[this.index][1]);
-          this.index++;
-        }
-      );
+    this.pause(false);
+    (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+      taskQueue[this.index][0],
+      async () => {
+        await taskQueue[this.index][2](taskQueue[this.index][1]);
+        this.index++;
+      }
+    );
   };
 
   goto = (index: number) => {
@@ -148,7 +150,8 @@ export class PrimController implements CodeController {
     };
   };
   length = taskQueue.length;
-  runFunc = null;
+  runFunc = async () => {};
+  stop = () => {};
 }
 
 export function getPrimCodeTree() {

@@ -166,8 +166,8 @@ export class TSPController implements CodeController {
   // 遗传算法不需要 index 和 length记录当前执行到的任务条数和总任务条数
   index = 0;
   length = 0;
-  stop: (() => void) | null = null;
-  runFunc: ((index: number, callback: () => Promise<void>) => Promise<void>) | null = null;
+  stop = () => {};
+  runFunc = async () => {};
   run = async () => {
     if (this.isRun) return;
     if (!this.tspInstance) return;
@@ -212,9 +212,12 @@ export async function createTSP(nodes: Node[], controller: TSPController) {
     nodes,
     async (index: number, paths: PathList, callback: (paths: PathList) => Promise<void>) => {
       if (controller.runFunc)
-        await controller.runFunc(index, async () => {
-          await runTSPTask(index, paths, callback);
-        });
+        await (controller.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+          index,
+          async () => {
+            await runTSPTask(index, paths, callback);
+          }
+        );
       else {
         await runTSPTask(index, paths, callback);
       }

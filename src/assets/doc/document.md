@@ -10,9 +10,9 @@
 
 > <warn icon='info-circle'/>
 >
-> 在下面的内容中，`[算法]`表示你的算法中文名，`[aL]`表示使用小驼峰命名法的英文名，`[AL]`表示使用大驼峰命名法的英文名，`[a-l]`表示使用kebab-case命名法的英文名。
+> 在下面的内容中，`[算法]`表示你的算法中文名，`[aL]`表示使用小驼峰命名法的英文名，`[AL]`表示使用大驼峰命名法的英文名，`[a-l]`表示使用 kebab-case 命名法的英文名。
 
-### 将算法添加到`html`
+### 将算法添加到 html
 
 在 `root\index.html` 文件中，找到 `id`为 `code-menu`的`nav`标签。这很容易，因为标签结构并不复杂。
 
@@ -95,7 +95,7 @@ let gotoTask: (() => number) | null = null;
 export class [AL]Controller implements CodeController {
   // 启发式算法的实例
   [al]Instance: [AL]Type | null = null;
-                          
+
   // 启发式算法不需要 index 和 length记录当前执行到的任务条数和总任务条数，初始化为0即可
   // 记录任务队列执行下标
   index = 0;
@@ -103,10 +103,10 @@ export class [AL]Controller implements CodeController {
   length = taskQueue.length;
   // 用于中断运行
   isRun = false;
-  // 由算法执行函数传入
-  runFunc: ((index: number, callback: () => Promise<void>) => Promise<void>) | null = null;
-  // 由算法执行函数传入，仅启发式算法需要
-  stop: (() => void) | null = null;
+  // 由算法执行函数重写，此处仅声明即可
+  runFunc = async () => {};
+  // 由算法执行函数重写，此处仅声明即可
+  stop = () => {};
 
   run = async () => {
     if (是否越界[(启发式算法不需要判断)(0 > this.index || this.index >= taskQueue.length)]) {
@@ -116,18 +116,19 @@ export class [AL]Controller implements CodeController {
     if (this.isRun) return;
     this.isRun = true;
     // 精确算法执行
-    this.runFunc && (await run[AL]Queue(this.runFunc, this));
+    await run[AL]Queue(this.runFunc, this);
     // 启发式算法执行，运行算法实例的开始操作
     this.[al]Instance.start();
   };
 
-  pause = () => {
+  pause = (runStop = true) => {
     this.isRun = false;
-    
+
+    if (runStop) this.stop();
+
     // 对于启发式算法，需要运行算法实例的停止操作
     if (!this.[al]Instance) return;
     this.[al]Instance.stop();
-    this.stop && this.stop();
   };
 
   prev = () => {
@@ -136,7 +137,7 @@ export class [AL]Controller implements CodeController {
       message: '不支持回退操作',
       type: 'warning',
     });
-    
+
     if (this.index <= 0) {
       this.index = 0;
       Msg.message({
@@ -147,17 +148,16 @@ export class [AL]Controller implements CodeController {
       return;
     }
 
-    this.pause();
+    this.pause(false);
     this.index -= 2;
 
-    this.runFunc &&
-      (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[this.index < 0 ? 0 : this.index][0],
-        async () => {
-          await taskQueue[this.index < 0 ? 0 : this.index][2](taskQueue[this.index][1]);
-          this.index++;
-        }
-      );
+    (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+      taskQueue[this.index < 0 ? 0 : this.index][0],
+      async () => {
+        await taskQueue[this.index < 0 ? 0 : this.index][2](taskQueue[this.index][1]);
+        this.index++;
+      }
+    );
   };
 
   next = () => {
@@ -166,7 +166,7 @@ export class [AL]Controller implements CodeController {
       message: '不支持进步操作',
       type: 'warning',
     });
-    
+
     if (this.index >= taskQueue.length) {
       this.index = taskQueue.length - 1;
       Msg.message({
@@ -177,25 +177,25 @@ export class [AL]Controller implements CodeController {
       return;
     }
 
-    this.pause();
-    this.runFunc &&
-      (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
-        taskQueue[this.index][0],
-        async () => {
-          await taskQueue[this.index][2](taskQueue[this.index][1]);
-          this.index++;
-        }
-      );
+    this.pause(false);
+
+    (this.runFunc as (index: number, callback: () => Promise<void>) => Promise<void>)(
+      taskQueue[this.index][0],
+      async () => {
+        await taskQueue[this.index][2](taskQueue[this.index][1]);
+        this.index++;
+      }
+    );
   };
 
- 
+
   goto = (index: number) => {
     // 启发式算法不支持跳转
     Msg.message({
       message: '不支持跳转操作',
       type: 'warning',
     });
-    
+
     this.run();
     gotoTask = () => {
       gotoTask = null;
@@ -277,9 +277,9 @@ export async function create[AL]TaskQueue(
     }
     return arr;
   }
-  
+
   bubbleSort(arr);
-  
+
   // 对于启发式算法，请参考应用中已实现的TSP算法
 
   controller.length = taskQueue.length;
@@ -311,10 +311,10 @@ const highlightCode = highlight(get[AL]Code().join('\n'), {
 export async function run[AL]() {
   // 根据算法创建随机数据
   const data = '// ...';
-  
+
   // 实例化控制器
   const controller = new [AL]Controller();
-  
+
   // 两个总执行函数使用方法是一样的
   await runExactAlgorithm(
     // html中，对应的 nav > ul > li 的下标
@@ -383,6 +383,6 @@ export function create[绘制类型](props: [绘制的数据类型]) {
 }
 ```
 
-><success/>
+> <success/>
 >
->**现在，你的算法应该已经成功添加到应用。**
+> **现在，你的算法应该已经成功添加到应用。**

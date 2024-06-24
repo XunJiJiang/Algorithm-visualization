@@ -4,9 +4,6 @@ import { randomColor } from './random-color';
 
 const chartDom = document.getElementById('canvas-container');
 let chart = echarts.init(chartDom);
-chartDom?.addEventListener('click', () => {
-  console.log(chart.getOption());
-});
 
 const baseOption = {
   animationDuration: 500,
@@ -262,7 +259,6 @@ export function createCoordinateMap(map: CoordinateMap[]) {
   resize();
   // 运行次数, 每次加1
   let runCount = 0;
-  console.log(map);
   const _option = {
     ...baseOption,
     animationDuration: 0,

@@ -143,7 +143,6 @@ function codePageButton() {
 
   for (let i = 0; i < codeMenuItem.length; i++) {
     codeMenuItem[i].addEventListener('click', () => {
-      console.log('click', codeMenuItem[i].innerHTML);
       if (codeMenuItem[i].innerHTML === '汉诺塔问题') {
         Msg.message({
           type: 'info',

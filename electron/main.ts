@@ -70,7 +70,7 @@ function createDocWindow() {
     modal: true,
     width: 1024,
     minWidth: 880,
-    height: 600,
+    height: 700,
     minHeight: 400,
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
