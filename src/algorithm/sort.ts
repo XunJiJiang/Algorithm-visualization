@@ -1,9 +1,9 @@
 /** 冒泡排序 */
-import type { CodeController } from '../utils/code-controller';
+import type { CodeController } from '../utils/code-controller.js';
 
-import { createSort } from '../utils/echarts';
-import { sleep } from '../utils/sleep';
-import { deepClone } from '../utils/deepClone';
+import { createSort } from '../utils/echarts.js';
+import { sleep } from '../utils/sleep.js';
+import { deepClone } from '../utils/deepClone.js';
 // @ts-ignore
 import Msg from '../components/message/index.js';
 
@@ -22,6 +22,41 @@ const bubbleSortCode = [
   '}',
 ];
 
+export function getBubbleSortCodeTree() {
+  return bubbleSortCode;
+}
+
+const quickSortCode = [
+  'function partition(arr, low, high) {',
+  '    let pivot = arr[low];',
+  '    while (low < high) {',
+  '        while (low < high && arr[high] > pivot) {',
+  '            --high;',
+  '        }',
+  '        arr[low] = arr[high];',
+  '        while (low < high && arr[low] <= pivot) {',
+  '            ++low;',
+  '        }',
+  '        arr[high] = arr[low];',
+  '    }',
+  '    arr[low] = pivot;',
+  '    return low;',
+  '}',
+  '',
+  'function quickSort(arr, low, high) {',
+  '    if (low < high) {',
+  '        let pivot = partition(arr, low, high);',
+  '        quickSort(arr, low, pivot - 1);',
+  '        quickSort(arr, pivot + 1, high);',
+  '    }',
+  '    return arr;',
+  '}',
+];
+
+export function getQuickSortCodeTree() {
+  return quickSortCode;
+}
+
 // number[] 是传入算法的参数的类型
 
 let taskQueue: [number, number[], (arr: number[]) => Promise<void>][] = [];
@@ -32,7 +67,7 @@ async function runBubbleSortQueue(
    * @param callback 回调函数，任务包括数据任务队列下标指针的移动和执行任务队列中的任务
    */
   callback: (index: number, callback: () => Promise<void>) => Promise<void>,
-  controller: BubbleSortController
+  controller: SortController
 ) {
   for (let i = controller.index; i < taskQueue.length; i++) {
     if (!controller.isRun) return;
@@ -48,7 +83,7 @@ async function runBubbleSortQueue(
 
 let gotoTask: (() => number) | null = null;
 
-export class BubbleSortController implements CodeController {
+export class SortController implements CodeController {
   index = 0;
   isRun = false;
 
@@ -123,11 +158,7 @@ export class BubbleSortController implements CodeController {
   runFunc = null;
 }
 
-export function getBubbleSortCodeTree() {
-  return bubbleSortCode;
-}
-
-export async function createBubbleSortTaskQueue(_arr: number[], controller: BubbleSortController) {
+export async function createBubbleSortTaskQueue(_arr: number[], controller: SortController) {
   taskQueue = [];
   controller.index = 0;
   controller.length = taskQueue.length;
@@ -149,7 +180,7 @@ export async function createBubbleSortTaskQueue(_arr: number[], controller: Bubb
     for (let j = 0; j < arr.length - 1; j++) {
       taskQueue.push([
         1,
-        deepClone(arr),
+        [],
         async () => {
           await sleep(100);
         },
@@ -157,7 +188,7 @@ export async function createBubbleSortTaskQueue(_arr: number[], controller: Bubb
       for (let i = 0; i < arr.length - 1 - j; i++) {
         taskQueue.push([
           2,
-          deepClone(arr),
+          [],
           async () => {
             await sleep(100);
           },
@@ -165,7 +196,7 @@ export async function createBubbleSortTaskQueue(_arr: number[], controller: Bubb
         if (arr[i] > arr[i + 1]) {
           taskQueue.push([
             3,
-            deepClone(arr),
+            [],
             async () => {
               await sleep(100);
             },
@@ -173,7 +204,7 @@ export async function createBubbleSortTaskQueue(_arr: number[], controller: Bubb
           let temp = arr[i];
           taskQueue.push([
             4,
-            deepClone(arr),
+            [],
             async () => {
               await sleep(100);
             },
@@ -181,7 +212,7 @@ export async function createBubbleSortTaskQueue(_arr: number[], controller: Bubb
           arr[i] = arr[i + 1];
           taskQueue.push([
             5,
-            deepClone(arr),
+            [],
             async () => {
               await sleep(100);
             },
@@ -202,6 +233,128 @@ export async function createBubbleSortTaskQueue(_arr: number[], controller: Bubb
   }
 
   bubbleSort(arr);
+
+  controller.length = taskQueue.length;
+}
+
+export async function createQuickSortTaskQueue(_arr: number[], controller: SortController) {
+  taskQueue = [];
+  controller.index = 0;
+  controller.length = taskQueue.length;
+  controller.isRun = false;
+  const arr = deepClone(_arr);
+  const sort = createSort(deepClone(arr));
+  await sleep(500);
+
+  taskQueue.push([
+    0,
+    deepClone(arr),
+    async arr => {
+      sort.setArr(arr);
+      await sleep(100);
+    },
+  ]);
+
+  function partition(arr: number[], low: number, high: number) {
+    let pivot = arr[low];
+    taskQueue.push([
+      1,
+      [],
+      async () => {
+        await sleep(100);
+      },
+    ]);
+    while (low < high) {
+      taskQueue.push([
+        2,
+        [],
+        async () => {
+          await sleep(100);
+        },
+      ]);
+      while (low < high && arr[high] > pivot) {
+        taskQueue.push([
+          3,
+          [],
+          async () => {
+            await sleep(100);
+          },
+        ]);
+        --high;
+        taskQueue.push([
+          4,
+          deepClone(arr),
+          async arr => {
+            sort.setArr(arr);
+            await sleep(500);
+          },
+        ]);
+      }
+      arr[low] = arr[high];
+      taskQueue.push([
+        6,
+        deepClone(arr),
+        async arr => {
+          sort.setArr(arr);
+          await sleep(500);
+        },
+      ]);
+      while (low < high && arr[low] <= pivot) {
+        taskQueue.push([
+          7,
+          [],
+          async () => {
+            await sleep(100);
+          },
+        ]);
+        ++low;
+        taskQueue.push([
+          8,
+          [],
+          async () => {
+            await sleep(100);
+          },
+        ]);
+      }
+      arr[high] = arr[low];
+      taskQueue.push([
+        10,
+        deepClone(arr),
+        async arr => {
+          sort.setArr(arr);
+          await sleep(500);
+        },
+      ]);
+    }
+    arr[low] = pivot;
+    taskQueue.push([
+      12,
+      deepClone(arr),
+      async arr => {
+        sort.setArr(arr);
+        await sleep(500);
+      },
+    ]);
+    taskQueue.push([
+      13,
+      [],
+      async () => {
+        await sleep(100);
+      },
+    ]);
+    return low;
+  }
+
+  function quickSort(arr: number[], low: number, high: number) {
+    if (low < high) {
+      let pivot = partition(arr, low, high);
+      quickSort(arr, low, pivot - 1);
+      quickSort(arr, pivot + 1, high);
+    }
+    return arr;
+  }
+
+  quickSort(arr, 0, arr.length - 1);
 
   controller.length = taskQueue.length;
 }

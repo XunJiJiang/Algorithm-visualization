@@ -155,7 +155,7 @@ type PathList = [Node, Node][];
  * @param paths
  * @param callback
  */
-async function runTSPTask(index: number, paths: PathList, callback: (paths: PathList) => Promise<void>) {
+async function runTSPTask(_: number, paths: PathList, callback: (paths: PathList) => Promise<void>) {
   await callback(paths);
 }
 

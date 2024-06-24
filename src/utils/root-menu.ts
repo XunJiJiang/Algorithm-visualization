@@ -1,7 +1,17 @@
 import interfaceControl from './interface-control';
 import { changePageInLoading } from './loading';
 import { resize } from './echarts';
-import { back, runBubbleSort, runMinimumSpanningTree, runHuffmanTree, runTSP, runGridCover } from './code';
+import {
+  back,
+  runQuickSort,
+  runBubbleSort,
+  runMinimumSpanningTree,
+  runHuffmanTree,
+  runTSP,
+  runGridCover,
+} from './code';
+// @ts-ignore
+import Msg from '../components/message';
 
 // const menuNode = document.querySelector('#menu-container') as HTMLElement;
 // const rootMenuNode = document.querySelector('#root-menu-container') as HTMLElement;
@@ -22,8 +32,14 @@ function eventRun() {
     });
   });
 
-  rootMenuNodeLi[1].addEventListener('click', () => {
-    console.log('click');
+  rootMenuNodeLi[1].addEventListener('click', e => {
+    e.preventDefault();
+    window.ipcRenderer.send('open-doc');
+  });
+
+  rootMenuNodeLi[2].addEventListener('click', e => {
+    e.preventDefault();
+    window.ipcRenderer.send('open-default-browser', 'https://github.com/XunJiJiang/Algorithm-visualization');
   });
 
   codePage();
@@ -51,21 +67,21 @@ function codePage() {
       const moveX = e.clientX - x;
       _width = __width + moveX;
       codeMenuNode.style.setProperty('--button-black-width', `${__width + moveX}px`);
-      codeNode.style.setProperty('--code-menu-width', `${__width + 50 + moveX}px`);
-      canvasNode.style.setProperty('--code-menu-width', `${__width + 50 + moveX}px`);
+      codeNode.style.setProperty('--code-menu-width', `${__width + 44 + moveX}px`);
+      canvasNode.style.setProperty('--code-menu-width', `${__width + 44 + moveX}px`);
     };
     const mouseupHandler = () => {
       document.removeEventListener('mousemove', mousemoveHandler);
       document.removeEventListener('mouseup', mouseupHandler);
       if (_width < min) {
         codeMenuNode.style.setProperty('--button-black-width', `${min}px`);
-        codeNode.style.setProperty('--code-menu-width', `${min + 50}px`);
-        canvasNode.style.setProperty('--code-menu-width', `${min + 50}px`);
+        codeNode.style.setProperty('--code-menu-width', `${min + 44}px`);
+        canvasNode.style.setProperty('--code-menu-width', `${min + 44}px`);
       }
       if (_width > max) {
         codeMenuNode.style.setProperty('--button-black-width', `${max}px`);
-        codeNode.style.setProperty('--code-menu-width', `${max + 50}px`);
-        canvasNode.style.setProperty('--code-menu-width', `${max + 50}px`);
+        codeNode.style.setProperty('--code-menu-width', `${max + 44}px`);
+        canvasNode.style.setProperty('--code-menu-width', `${max + 44}px`);
       }
       codeMenuDargBar.setAttribute('dragging', 'false');
       resize();
@@ -128,14 +144,28 @@ function codePageButton() {
   for (let i = 0; i < codeMenuItem.length; i++) {
     codeMenuItem[i].addEventListener('click', () => {
       console.log('click', codeMenuItem[i].innerHTML);
-      if (codeMenuItem[i].innerHTML === '冒泡排序') {
-        runBubbleSort();
+      if (codeMenuItem[i].innerHTML === '汉诺塔问题') {
+        Msg.message({
+          type: 'info',
+          message: '暂未实现',
+          duration: 2000,
+        });
       } else if (codeMenuItem[i].innerHTML === '最小生成树问题') {
         runMinimumSpanningTree();
       } else if (codeMenuItem[i].innerHTML === '哈夫曼树构造问题') {
         runHuffmanTree();
       } else if (codeMenuItem[i].innerHTML === '旅行商(TSP)问题') {
         runTSP();
+      } else if (codeMenuItem[i].innerHTML === '图的m着色问题') {
+        Msg.message({
+          type: 'info',
+          message: '暂未实现',
+          duration: 2000,
+        });
+      } else if (codeMenuItem[i].innerHTML === '快速排序') {
+        runQuickSort();
+      } else if (codeMenuItem[i].innerHTML === '冒泡排序') {
+        runBubbleSort();
       } else if (codeMenuItem[i].innerHTML === '棋盘覆盖问题') {
         runGridCover();
       }

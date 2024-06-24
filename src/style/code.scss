@@ -2,7 +2,7 @@
   position: absolute;
   right: 0px;
   top: 0px;
-  width: calc(100% - var(--code-menu-width));
+  width: calc(100% - var(--code-menu-width) - 6px);
   height: var(--code-container-height);
   --beforeHeight: 100%;
   overflow: hidden;
@@ -92,7 +92,7 @@
   position: absolute;
   right: 0px;
   top: var(--code-container-height);
-  width: calc(100% - var(--code-menu-width));
+  width: calc(100% - var(--code-menu-width) - 6px);
   height: calc(100% - var(--code-container-height));
 
   --beforeTop: 0;

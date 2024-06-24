@@ -1,6 +1,12 @@
 import type { CodeController } from './code-controller';
 
-import { createBubbleSortTaskQueue, getBubbleSortCodeTree, BubbleSortController } from '../algorithm/bubble-sort';
+import {
+  createBubbleSortTaskQueue,
+  getBubbleSortCodeTree,
+  SortController,
+  getQuickSortCodeTree,
+  createQuickSortTaskQueue,
+} from '../algorithm/sort.js';
 import { createPrimTaskQueue, getPrimCodeTree, PrimController } from '../algorithm/minimum-spanning-tree';
 import { createHuffmanTreeTaskQueue, HuffmanTreeController, getHuffmanTreeCodeTree } from '../algorithm/huffman-tree';
 import { createGridCoverTaskQueue, GridCoverController, getGridCoverCodeTree } from '../algorithm/grid-cover';
@@ -32,7 +38,7 @@ export function back() {
   }
   if (nowController) {
     nowController.pause();
-    isSomeRun = false;
+    // isSomeRun = false;
     controllerSwitch.innerHTML = '播放';
   }
   setActiveMenuItem(0, true);
@@ -60,7 +66,7 @@ function setActiveMenuItem(index: number, close = false) {
 
 const { highlight } = hljs;
 
-let isSomeRun = false;
+// let isSomeRun = false;
 
 let unbindControllerEvent: (() => void) | null = null;
 
@@ -73,7 +79,7 @@ function controllerEvent(controller: CodeController) {
     } else {
       controller.run();
     }
-    isSomeRun = controller.isRun;
+    // isSomeRun = controller.isRun;
     controllerSwitch.innerHTML = controller.isRun ? '暂停' : '播放';
   };
 
@@ -111,6 +117,9 @@ window.addEventListener(
   }, 500)
 );
 
+// 是否正在切换算法
+let isSwitch = false;
+
 /**
  * 运行精确的算法
  * @param index 页面显示的按钮的索引
@@ -119,24 +128,30 @@ window.addEventListener(
  * @param controller 动画控制器, 由算法运行部分提供
  * @returns
  */
-async function runExactAlgorithm(
+export async function runExactAlgorithm(
   index: number,
   highlightCode: string,
   createTaskQueue: () => Promise<void>,
   controller: CodeController
 ) {
-  if (isSomeRun) {
+  if (isSwitch) {
     Msg.message({
-      message: '算法正在播放, 请先暂停',
+      message: '正在切换算法',
       type: 'warning',
       duration: 500,
     });
     return;
   }
+  await new Promise(resolve => {
+    isSwitch = true;
+    back();
+    resolve(void 0);
+  });
+
   if (unbindControllerEvent) {
     unbindControllerEvent();
   }
-  isSomeRun = true;
+  // isSomeRun = true;
   controllerSwitch.innerHTML = '暂停';
   nowController = controller;
   setActiveMenuItem(index);
@@ -159,6 +174,7 @@ async function runExactAlgorithm(
       canvasContainer.style.setProperty('--beforeTop', '100%');
     }, 700);
     setTimeout(() => {
+      isSwitch = false;
       resolve(void 0);
     }, 1300);
   });
@@ -178,7 +194,7 @@ async function runExactAlgorithm(
     const codeContainerHeight = parseFloat(getComputedStyle(codeContainer).height);
     codeBlock.style.top = `${-_index * 22 + codeContainerHeight / 2 - 10}px`;
     await callback();
-    isSomeRun = controller.isRun;
+    // isSomeRun = controller.isRun;
     controllerSwitch.innerHTML = controller.isRun ? '暂停' : '播放';
     if (controller.index === controller.length - 1) {
       controllerProgressBar.style.setProperty('--controller-progress-bar-width', '0%');
@@ -186,7 +202,7 @@ async function runExactAlgorithm(
       codeHighlightBar.style.opacity = '0';
       codeBlock.style.top = '20px';
       setActiveMenuItem(index, true);
-      isSomeRun = false;
+      // isSomeRun = false;
       controllerSwitch.innerHTML = '播放';
       controller.index = 0;
       controller.isRun = false;
@@ -204,24 +220,30 @@ async function runExactAlgorithm(
  * @param controller 动画控制器, 由算法运行部分提供. 由于启发式算法的特殊性，不需要实现prev, next和 goto方法
  * @returns
  */
-async function runMetaHeuristicAlgorithm(
+export async function runMetaHeuristicAlgorithm(
   index: number,
   highlightCode: string,
   createTask: () => Promise<void>,
   controller: CodeController
 ) {
-  if (isSomeRun) {
+  if (isSwitch) {
     Msg.message({
-      message: '算法正在播放, 请先暂停',
+      message: '正在切换算法',
       type: 'warning',
       duration: 500,
     });
     return;
   }
+  await new Promise(resolve => {
+    isSwitch = true;
+    back();
+    resolve(void 0);
+  });
+
   if (unbindControllerEvent) {
     unbindControllerEvent();
   }
-  isSomeRun = true;
+  // isSomeRun = true;
   controllerSwitch.innerHTML = '暂停';
   nowController = controller;
   setActiveMenuItem(index);
@@ -244,6 +266,7 @@ async function runMetaHeuristicAlgorithm(
       canvasContainer.style.setProperty('--beforeTop', '100%');
     }, 700);
     setTimeout(() => {
+      isSwitch = false;
       resolve(void 0);
     }, 1300);
   });
@@ -260,7 +283,7 @@ async function runMetaHeuristicAlgorithm(
     const codeContainerHeight = parseFloat(getComputedStyle(codeContainer).height);
     codeBlock.style.top = `${-_index * 22 + codeContainerHeight / 2 - 10}px`;
     await callback();
-    isSomeRun = controller.isRun;
+    // isSomeRun = controller.isRun;
     controllerSwitch.innerHTML = controller.isRun ? '暂停' : '播放';
   };
 
@@ -269,7 +292,7 @@ async function runMetaHeuristicAlgorithm(
     codeHighlightBar.style.opacity = '0';
     codeBlock.style.top = '20px';
     setActiveMenuItem(index, true);
-    isSomeRun = false;
+    // isSomeRun = false;
     controllerSwitch.innerHTML = '播放';
     controller.isRun = false;
   };
@@ -277,16 +300,38 @@ async function runMetaHeuristicAlgorithm(
   await controller.run();
 }
 
+const highlightQuickSort = highlight(getQuickSortCodeTree().join('\n'), {
+  language: 'javascript',
+}).value;
+
+/**
+ *  冒泡排序
+ */
+export async function runQuickSort() {
+  const len = Math.floor(Math.random() * 10) + 5;
+  const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10) + 1);
+  const controller = new SortController();
+  await runExactAlgorithm(
+    5,
+    highlightQuickSort,
+    createQuickSortTaskQueue.bind(null, arr, controller),
+    controller as unknown as CodeController
+  );
+}
+
 const highlightBubbleSort = highlight(getBubbleSortCodeTree().join('\n'), {
   language: 'javascript',
 }).value;
 
+/**
+ *  冒泡排序
+ */
 export async function runBubbleSort() {
   const len = Math.floor(Math.random() * 10) + 5;
   const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10) + 1);
-  const controller = new BubbleSortController();
+  const controller = new SortController();
   await runExactAlgorithm(
-    0,
+    6,
     highlightBubbleSort,
     createBubbleSortTaskQueue.bind(null, arr, controller),
     controller as unknown as CodeController
@@ -299,6 +344,9 @@ const highlightPrim = highlight(getPrimCodeTree().join('\n'), {
   language: 'typescript',
 }).value;
 
+/**
+ * 最小生成树
+ */
 export async function runMinimumSpanningTree() {
   const verticesNum = Math.floor(Math.random() * 3) + 4;
   // 通过asc2 码转换为字母，A-Z
@@ -330,6 +378,9 @@ const highlightHuffmanTree = highlight(getHuffmanTreeCodeTree().join('\n'), {
   language: 'javascript',
 }).value;
 
+/**
+ * 哈夫曼树构造问题
+ */
 export async function runHuffmanTree() {
   const len = Math.floor(Math.random() * 10) + 22;
   // 只生成A-H的字符串
@@ -348,6 +399,9 @@ const highlightTSP = highlight(getTSPcode().join('\n'), {
   language: 'javascript',
 }).value;
 
+/**
+ * 旅行商(TSP)问题
+ */
 export async function runTSP() {
   // 城市数量
   const len = Math.floor(Math.random() * 15) + 25;
@@ -376,13 +430,16 @@ const highlightGridCover = highlight(getGridCoverCodeTree().join('\n'), {
   language: 'javascript',
 }).value;
 
-export function runGridCover() {
+/**
+ * 棋盘覆盖问题
+ */
+export async function runGridCover() {
   const k = Math.floor(Math.random() * 4) + 2;
   const row = Math.floor(Math.random() * 2 ** k) + 1;
   const col = Math.floor(Math.random() * 2 ** k) + 1;
   const controller = new GridCoverController();
-  runExactAlgorithm(
-    4,
+  await runExactAlgorithm(
+    7,
     highlightGridCover,
     createGridCoverTaskQueue.bind(null, [k, row, col], controller),
     controller as unknown as CodeController

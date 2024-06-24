@@ -1,0 +1,82 @@
+/* start markdown-code */
+
+/* .markdown-code {} */
+
+.markdown .markdown-code::selection,
+.markdown .markdown-code ::selection {
+  background: #d3d3d3;
+  color: #555;
+  text-shadow: rgb(255, 255, 255) 0px 1px 0px;
+}
+
+.markdown .markdown-code::-moz-selection,
+.markdown .markdown-code ::-moz-selection {
+  background: #d3d3d3;
+  color: #555;
+  text-shadow: rgb(255, 255, 255) 0px 1px 0px;
+}
+
+.markdown .markdown-code::-webkit-selection,
+.markdown .markdown-code ::-webkit-selection {
+  background: #d3d3d3;
+  color: #555;
+  text-shadow: rgb(255, 255, 255) 0px 1px 0px;
+}
+
+/* end markdown-code */
+
+/* start markdown-long-code */
+
+.markdown-long-code {
+  position: relative;
+}
+
+/* end markdown-long-code */
+
+/* start markdown-short-code */
+
+.markdown-short-code {
+  padding: 1px 3px;
+  border-radius: 0.375rem;
+  font-weight: bold;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  box-decoration-break: clone;
+}
+
+.markdown-short-code.markdown-short-code-success {
+  background-color: #ecf8f2;
+  color: #2b6e62;
+}
+
+.markdown-short-code.markdown-short-code-warn {
+  background-color: #db7d271a;
+  color: #b65700;
+}
+
+.markdown-short-code.markdown-short-code-danger {
+  background-color: #ffe9e9;
+  color: #d93030;
+}
+
+.markdown-short-code.markdown-short-code-info {
+  background-color: #99a1b338;
+  color: #404756;
+}
+
+a:has(.markdown-short-code-success) {
+  text-decoration-color: #2b6e62;
+}
+
+a:has(.markdown-short-code-warn) {
+  text-decoration-color: #b65700;
+}
+
+a:has(.markdown-short-code-danger) {
+  text-decoration-color: #d93030;
+}
+
+a:has(.markdown-short-code-info) {
+  text-decoration-color: #404756;
+}
+
+/* end markdown-short-code */

@@ -34,6 +34,14 @@ a.btn {
       border-color: rgba(0, 0, 0, 0);
     }
   }
+
+  &.disabled {
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: #00000000;
+    }
+  }
 }
 
 // 比较大的按钮
@@ -73,5 +81,13 @@ a.block {
   &.back {
     height: 50px;
     line-height: 50px;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: #00000000;
+    }
   }
 }

@@ -1,10 +1,26 @@
 import { defineConfig } from 'vite';
 import path from 'node:path';
 import electron from 'vite-plugin-electron/simple';
+import react from '@vitejs/plugin-react';
+
+function imgPath() {
+  return {
+    name: 'img-path',
+    transform(src: string, id: string) {
+      if (id.endsWith('.png') || id.endsWith('.jpg') || id.endsWith('.jpeg') || id.endsWith('.gif')) {
+        return;
+      }
+      return;
+    },
+  };
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    react(),
+    imgPath(),
+    // @ts-ignore
     electron({
       main: {
         // Shortcut of `build.lib.entry`.
@@ -27,6 +43,14 @@ export default defineConfig({
   ],
   build: {
     outDir: './build',
+    rollupOptions: {
+      // ...
+      // input:"src/index.js"
+      input: {
+        main: 'index.html',
+        doc: 'doc.html',
+      },
+    },
   },
 });
 

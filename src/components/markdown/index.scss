@@ -1,0 +1,62 @@
+/* > start markdown */
+
+.markdown {
+  font-size: 16px;
+  padding: 0;
+}
+
+.markdown ::selection,
+.markdown ::selection {
+  background: #d3d3d3;
+  color: #555;
+  text-shadow: rgb(255, 255, 255) 0px 1px 0px;
+}
+
+.markdown ::-moz-selection,
+.markdown ::-moz-selection {
+  background: #d3d3d3;
+  color: #555;
+  text-shadow: rgb(255, 255, 255) 0px 1px 0px;
+}
+
+.markdown ::-webkit-selection,
+.markdown ::-webkit-selection {
+  background: #d3d3d3;
+  color: #555;
+  text-shadow: rgb(255, 255, 255) 0px 1px 0px;
+}
+
+/* < end markdown */
+
+/* > start markdown-link */
+
+.markdown-link {
+  color: #42b983;
+  /* text-decoration: none; */
+}
+
+/* < end markdown-link */
+
+/* > start markdown-blockquote */
+
+/* - Code in <./blockquote/index.css> */
+
+/* < end markdown-blockquote */
+
+/* > start markdown-pre */
+
+/* - Code in <./pre/index.css> */
+
+/* < end markdown-pre */
+
+/* > start markdown-img */
+
+/* - Code in <./img/index.css> */
+
+/* < end markdown-img */
+
+/* > start markdown-title h1 h2 h3 */
+
+/* - Code in <./title/index.css> */
+
+/* < end markdown-title h1 h2 h3 */

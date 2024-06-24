@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -49,13 +49,43 @@ function createWindow() {
 
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
+    win.webContents.openDevTools();
   } else {
     // win.loadFile('build/index.html')
     // TODO: 这里用绝对路径，不然会路径错误。怎么回事？
     win.loadFile('index.html');
   }
 
-  win.webContents.openDevTools();
+  ipcMain.on('open-default-browser', (_event, url) => {
+    shell.openExternal(url);
+  });
+
+  ipcMain.on('open-doc', createDocWindow);
+}
+
+function createDocWindow() {
+  if (!win) return;
+  const docWin = new BrowserWindow({
+    parent: win,
+    modal: true,
+    width: 1024,
+    minWidth: 880,
+    height: 600,
+    minHeight: 400,
+    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.mjs'),
+    },
+  });
+
+  // docWin.show();
+
+  if (VITE_DEV_SERVER_URL) {
+    docWin.loadURL(path.join(VITE_DEV_SERVER_URL, 'doc.html'));
+    docWin.webContents.openDevTools();
+  } else {
+    docWin.loadFile('doc.html');
+  }
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common

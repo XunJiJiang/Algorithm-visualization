@@ -58,7 +58,7 @@
   & #code-menu {
     -webkit-app-region: none;
     height: 100%;
-    overflow: auto;
+    overflow-y: scroll;
     & a.code-menu-back {
       position: fixed;
       margin: 20px;

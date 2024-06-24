@@ -1,0 +1,18 @@
+.markdown-img {
+  position: relative;
+  left: 50%;
+  max-width: 100%;
+  transform: translateX(-50%);
+  transition: all 0.3s;
+}
+
+.markdown-img[data-img-is-error='false'] {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.markdown-img:hover[data-img-is-error='false'] {
+  border-radius: 0;
+}
+
+/* .markdown-img[data-img-is-error='true'] {} */

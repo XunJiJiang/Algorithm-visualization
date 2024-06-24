@@ -28,7 +28,7 @@ export function runGridCoverCode([k, row, col], addTask, gripControl) {
 
     addTask(4, grid, async grid => {
       gripControl.setGrip(grid);
-      await sleep(500);
+      await sleep(200);
     });
 
     // tr表示棋盘左上角的行号，tc表示棋盘左上角的列号，dr表示特殊方格的行号，dc表示特殊方格的列好，size表示棋盘的大小
@@ -47,7 +47,7 @@ export function runGridCoverCode([k, row, col], addTask, gripControl) {
         grid[tr + s - 1][tc + s - 1] = t;
         addTask(12, grid, async grid => {
           gripControl.setGrip(grid);
-          await sleep(500);
+          await sleep(200);
         });
         // 分解特殊棋盘
         chessBoard(tr, tc, tr + s - 1, tc + s - 1, s);
@@ -62,7 +62,7 @@ export function runGridCoverCode([k, row, col], addTask, gripControl) {
         grid[tr + s - 1][tc + s] = t;
         addTask(18, grid, async grid => {
           gripControl.setGrip(grid);
-          await sleep(500);
+          await sleep(200);
         });
         chessBoard(tr, tc + s, tr + s - 1, tc + s, s);
       }
@@ -76,7 +76,7 @@ export function runGridCoverCode([k, row, col], addTask, gripControl) {
         grid[tr + s][tc + s - 1] = t;
         addTask(24, grid, async grid => {
           gripControl.setGrip(grid);
-          await sleep(500);
+          await sleep(200);
         });
         chessBoard(tr + s, tc, tr + s, tc + s - 1, s);
       }
@@ -90,7 +90,7 @@ export function runGridCoverCode([k, row, col], addTask, gripControl) {
         grid[tr + s][tc + s] = t;
         addTask(30, grid, async grid => {
           gripControl.setGrip(grid);
-          await sleep(500);
+          await sleep(200);
         });
         chessBoard(tr + s, tc + s, tr + s, tc + s, s);
       }
@@ -99,7 +99,7 @@ export function runGridCoverCode([k, row, col], addTask, gripControl) {
     chessBoard(0, 0, row - 1, col - 1, size);
     addTask(35, grid, async grid => {
       gripControl.setGrip(grid);
-      await sleep(500);
+      await sleep(200);
     });
     return grid;
   }

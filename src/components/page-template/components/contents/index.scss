@@ -1,0 +1,114 @@
+.contents-in-page {
+  position: sticky;
+  max-height: 100vh;
+  top: 0;
+  font-size: 16px;
+  max-width: 256px;
+  min-width: 128px;
+  overflow-y: auto;
+}
+
+.contents-in-page .contents-in-page-title {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 64px;
+  margin-bottom: 36px;
+  color: #525252;
+}
+
+.contents-in-page ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.contents-in-page ul li.contents-in-page-item-box {
+  padding: 0;
+  border-radius: 0.75rem 0 0 0.75rem;
+  height: 36px;
+  cursor: pointer;
+}
+
+.contents-in-page ul li.contents-in-page-item-box a.contents-in-page-item {
+  display: block;
+  font-size: 14px;
+  line-height: 20px;
+  height: 20px;
+  margin: 0;
+  padding: 8px 8px 8px 0;
+  color: #000000;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.contents-in-page
+  ul
+  li.contents-in-page-item-box
+  a.contents-in-page-item.contents-in-page-item-1 {
+  margin-left: 0;
+}
+
+.contents-in-page
+  ul
+  li.contents-in-page-item-box
+  a.contents-in-page-item.contents-in-page-item-2 {
+  margin-left: 8px;
+}
+
+.contents-in-page
+  ul
+  li.contents-in-page-item-box
+  a.contents-in-page-item.contents-in-page-item-3 {
+  margin-left: 16px;
+}
+
+.contents-in-page ul li.contents-in-page-item-box:hover {
+  background-color: #f6f7f9;
+}
+
+.contents-in-page
+  ul
+  li.contents-in-page-item-box:hover
+  a.contents-in-page-item {
+  color: #087ea4;
+}
+
+.contents-in-page ul li.contents-in-page-item-box:active {
+  background-color: #ededee;
+}
+
+.contents-in-page
+  ul
+  li.contents-in-page-item-box:active
+  a.contents-in-page-item {
+  color: #087ea4;
+}
+
+.contents-in-page ul li.contents-in-page-item-box[data-active='true'] {
+  background-color: #e6f7ff;
+}
+
+.contents-in-page
+  ul
+  li.contents-in-page-item-box[data-active='true']
+  a.contents-in-page-item {
+  color: #087ea4;
+}
+
+.contents-in-page::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.contents-in-page::-webkit-scrollbar-thumb {
+  background-color: #d6d6d6;
+  border-radius: 2px;
+}
+
+.contents-in-page::-webkit-scrollbar-track {
+  background-color: #00000000;
+}
+
+.contents-in-page::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+}

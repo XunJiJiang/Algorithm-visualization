@@ -1,0 +1,108 @@
+.markdown-pre {
+  position: relative;
+}
+
+.markdown-pre div {
+  border-radius: 10px;
+  /* box-shadow: 0 0 8px #44444477; */
+}
+
+.markdown-pre .markdown-pre-copy {
+  --circle-stroke-dashoffset: 38;
+  --polyline-stroke-dashoffset: 11;
+  --svg-opacity: 0;
+  --icon-opacity: 1;
+  --svg-transition: all 0.6s;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #a3a3a388;
+  background-color: #00000000;
+  padding: 2px 6px 4px 6px;
+  border-radius: 5px 10px 5px 10px;
+  font-style: normal;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  user-select: none;
+  cursor: pointer;
+  transition: color 0.3s;
+  /* z-index: 1; */
+}
+
+.markdown-pre .markdown-pre-copy .markdown-pre-copy-icon {
+  line-height: 24px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 14px;
+  padding: 3px 2px 2px 1.4px;
+  border: #00000000 solid 1.4px;
+  transition:
+    border 0.3s,
+    opacity 0.6s;
+  opacity: var(--icon-opacity);
+}
+
+.markdown-pre .markdown-pre-copy:hover .markdown-pre-copy-icon {
+  border: #00000033 solid 1.4px;
+}
+
+.markdown-pre .markdown-pre-copy:hover {
+  color: #a3a3a3;
+}
+
+.markdown-pre .markdown-pre-copy .markdown-pre-copy-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  padding: 6px 8px 6px 8px;
+  opacity: var(--svg-opacity);
+  transition: all 0.6s;
+}
+
+.markdown-pre .markdown-pre-copy .markdown-pre-copy-svg {
+  fill: none;
+  stroke: #a3a3a3cc;
+  transition:
+    stroke 0.6s,
+    opacity 0.6s;
+}
+
+.markdown-pre
+  .markdown-pre-copy
+  .markdown-pre-copy-svg
+  .markdown-pre-copy-svg-circle {
+  stroke-dasharray: 38;
+  stroke-dashoffset: var(--circle-stroke-dashoffset);
+  stroke-width: 1.2px;
+  stroke-linecap: round;
+  transition: var(--svg-transition);
+}
+
+.markdown-pre
+  .markdown-pre-copy
+  .markdown-pre-copy-svg
+  .markdown-pre-copy-svg-polyline {
+  stroke-dasharray: 11;
+  stroke-dashoffset: var(--polyline-stroke-dashoffset);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: var(--svg-transition);
+}
+
+.markdown-pre::before {
+  content: attr(data-language);
+  position: absolute;
+  bottom: 3px;
+  right: 5px;
+  color: #a3a3a388;
+  transition: all 0.3s;
+  /* user-select: none; */
+  z-index: 1;
+}
+
+.markdown-pre:hover::before {
+  color: #a3a3a3;
+}
