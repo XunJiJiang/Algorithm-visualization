@@ -16,6 +16,8 @@ import { throttle } from './throttle';
 import 'highlight.js/styles/atom-one-dark.css';
 // @ts-ignore
 import Msg from '../components/message/index.js';
+// @ts-ignore
+import Notify from '../components/notification/index.js';
 
 const codeContainer = document.querySelector('#code-container') as HTMLElement;
 const preBlock = document.querySelector('#pre-block') as HTMLElement;
@@ -310,12 +312,19 @@ const highlightQuickSort = highlight(getQuickSortCodeTree().join('\n'), {
 }).value;
 
 /**
- *  冒泡排序
+ *  快速排序
  */
 export async function runQuickSort() {
   const len = Math.floor(Math.random() * 10) + 5;
   const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10) + 1);
   const controller = new SortController();
+  !isSwitch &&
+    Notify.notification({
+      title: '已生成随机参数',
+      message: `[${arr.join(', ')}]`,
+      duration: 3000,
+      type: 'info',
+    });
   await runExactAlgorithm(
     5,
     highlightQuickSort,
@@ -335,6 +344,13 @@ export async function runBubbleSort() {
   const len = Math.floor(Math.random() * 10) + 5;
   const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10) + 1);
   const controller = new SortController();
+  !isSwitch &&
+    Notify.notification({
+      title: '已生成随机参数',
+      message: `[${arr.join(', ')}]`,
+      duration: 3000,
+      type: 'info',
+    });
   await runExactAlgorithm(
     6,
     highlightBubbleSort,
@@ -364,12 +380,15 @@ export async function runMinimumSpanningTree() {
     if (from >= to) return null;
     edges.push([from, to, Math.floor(Math.random() * 8) + 1]);
   });
-  // 在确保连通的情况下，随机删除一些边
-  // const deleteNum = Math.floor(Math.random() * 3);
-  // Array.from({ length: deleteNum }, () => {
-  //   const index = Math.floor(Math.random() * edges.length);
-  //   edges.splice(index, 1);
-  // });
+  !isSwitch &&
+    Notify.notification({
+      title: '已生成随机参数',
+      message: `顶点: [${vertices.join(', ')}], 边: [${edges
+        .map(edge => `[${vertices[edge[0]]}-${edge[2]}-${vertices[edge[1]]}]`)
+        .join(', ')}]`,
+      duration: 3000,
+      type: 'info',
+    });
   const controller = new PrimController();
   await runExactAlgorithm(
     1,
@@ -390,7 +409,13 @@ export async function runHuffmanTree() {
   const len = Math.floor(Math.random() * 10) + 22;
   // 只生成A-H的字符串
   const str = Array.from({ length: len }, () => String.fromCharCode(Math.floor(Math.random() * 8) + 65)).join('');
-
+  !isSwitch &&
+    Notify.notification({
+      title: '已生成随机参数',
+      message: str,
+      duration: 3000,
+      type: 'info',
+    });
   const controller = new HuffmanTreeController();
   await runExactAlgorithm(
     2,
@@ -420,7 +445,13 @@ export async function runTSP() {
     x: Math.floor(Math.random() * 600),
     y: Math.floor(Math.random() * 200),
   }));
-
+  !isSwitch &&
+    Notify.notification({
+      title: '已生成随机参数',
+      message: `[${cities.map(city => `${city.name}(${city.x}, ${city.y})`).join(', ')}]`,
+      duration: 3000,
+      type: 'info',
+    });
   const controller = new TSPController();
 
   await runMetaHeuristicAlgorithm(
@@ -442,6 +473,13 @@ export async function runGridCover() {
   const k = Math.floor(Math.random() * 4) + 2;
   const row = Math.floor(Math.random() * 2 ** k) + 1;
   const col = Math.floor(Math.random() * 2 ** k) + 1;
+  !isSwitch &&
+    Notify.notification({
+      title: '已生成随机参数',
+      message: `k: ${k}, 特殊点: [${col}, ${row}]`,
+      duration: 3000,
+      type: 'info',
+    });
   const controller = new GridCoverController();
   await runExactAlgorithm(
     7,

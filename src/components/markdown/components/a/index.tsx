@@ -5,7 +5,7 @@ import { useRef, useEffect } from 'react';
 import Icon from '../../../icon/index.tsx';
 import { getStringWidth } from '../../../../utils/getStringWidth';
 
-export default function APopover({ className = '', children, href = '', ...props }: APopoverProps) {
+export default function APopover({ className = '', children, href = '' }: APopoverProps) {
   const aRef = useRef<HTMLAnchorElement>(null);
   const popoverRef = useRef<HTMLElement>(null);
   const timeout = useRef<NodeJS.Timeout>();
@@ -38,7 +38,6 @@ export default function APopover({ className = '', children, href = '', ...props
     <a
       ref={aRef}
       className={`${className} a-link`}
-      {...props}
       onMouseEnter={() => {
         if (!popoverRef.current) return;
         clearTimeout(timeout.current);
@@ -56,6 +55,10 @@ export default function APopover({ className = '', children, href = '', ...props
           if (!popoverRef.current) return;
           popoverRef.current.style.display = 'none';
         }, 300);
+      }}
+      onClick={e => {
+        e.preventDefault();
+        window.ipcRenderer.send('open-default-browser', href);
       }}
     >
       {children}

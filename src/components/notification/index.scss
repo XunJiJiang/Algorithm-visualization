@@ -1,7 +1,7 @@
 .notificationBasicBox {
   position: fixed;
   width: 0;
-  transition: all .4s;
+  transition: all 0.4s;
 
   .ui-notification-top {
     margin: 16px 0 0 0;
@@ -21,18 +21,18 @@
     padding: 14px 16px 14px 13px;
     border: 2px solid;
     border-radius: 8px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
-    transition: all .4s;
+    transition: all 0.4s;
 
     div {
-      transition: all .4s;
+      transition: all 0.4s;
     }
 
     .ui-notification-title {
       color: rgb(48, 49, 51);
-      height: 21;
+      height: 21px;
       font-size: 16px;
       font-weight: 700;
       margin: 0 8px 6px 13px;
@@ -41,11 +41,12 @@
     .ui-notification-message {
       color: rgb(96, 98, 102);
       font-size: 14px;
-      height: 21;
+      height: 21px;
       font-weight: 400;
       line-height: 21px;
       margin: 0 8px 0 13px;
       text-align: justify;
+      overflow-y: scroll;
     }
   }
 
@@ -150,7 +151,7 @@
   position: absolute;
   top: 5px;
   right: 5px;
-  transition: all .2s;
+  transition: all 0.2s;
   border-radius: 50%;
   width: 10px;
   height: 10px;

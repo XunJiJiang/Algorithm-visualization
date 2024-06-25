@@ -96,7 +96,7 @@ const getBlockquoteConfig: GetBlockquoteConfigFunc = node => {
   return [tag, title !== '', title, attributes];
 };
 
-export default function Blockquote({ node, className = '', children = [''], ...props }: BlockquoteProps) {
+export default function Blockquote({ node, className = '', children = [''] }: BlockquoteProps) {
   const [_children, _className] = (() => {
     if (node && node.children && node.children[1]) {
       const [key, hasTitle, title, attributes] = getBlockquoteConfig(node.children[1] as NodeType);
@@ -116,9 +116,5 @@ export default function Blockquote({ node, className = '', children = [''], ...p
       return [_children, 'markdown-blockquote-info'];
     }
   })();
-  return (
-    <blockquote className={`markdown-blockquote ${_className} ${className ?? ''}`} {...props}>
-      {_children}
-    </blockquote>
-  );
+  return <blockquote className={`markdown-blockquote ${_className} ${className ?? ''}`}>{_children}</blockquote>;
 }
