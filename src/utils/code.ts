@@ -40,7 +40,6 @@ export function back() {
   }
   if (nowController) {
     nowController.pause();
-    // isSomeRun = false;
     controllerSwitch.innerHTML = '播放';
   }
   setActiveMenuItem(0, true);
@@ -68,8 +67,6 @@ function setActiveMenuItem(index: number, close = false) {
 
 const { highlight } = hljs;
 
-// let isSomeRun = false;
-
 let unbindControllerEvent: (() => void) | null = null;
 
 let nowController: CodeController | null = null;
@@ -81,7 +78,6 @@ function controllerEvent(controller: CodeController) {
     } else {
       controller.run();
     }
-    // isSomeRun = controller.isRun;
     controllerSwitch.innerHTML = controller.isRun ? '暂停' : '播放';
   };
 
@@ -153,7 +149,7 @@ export async function runExactAlgorithm(
   if (unbindControllerEvent) {
     unbindControllerEvent();
   }
-  // isSomeRun = true;
+
   controllerSwitch.innerHTML = '暂停';
   nowController = controller;
   setActiveMenuItem(index);
@@ -190,7 +186,6 @@ export async function runExactAlgorithm(
     codeHighlightBar.style.opacity = '0';
     codeBlock.style.top = '20px';
     setActiveMenuItem(index, true);
-    // isSomeRun = false;
     controllerSwitch.innerHTML = '播放';
     controller.isRun = false;
   };
@@ -207,7 +202,6 @@ export async function runExactAlgorithm(
     const codeContainerHeight = parseFloat(getComputedStyle(codeContainer).height);
     codeBlock.style.top = `${-_index * 22 + codeContainerHeight / 2 - 10}px`;
     await callback();
-    // isSomeRun = controller.isRun;
     controllerSwitch.innerHTML = controller.isRun ? '暂停' : '播放';
     if (controller.index === controller.length - 1) {
       controllerProgressBar.style.setProperty('--controller-progress-bar-width', '0%');
@@ -250,7 +244,6 @@ export async function runMetaHeuristicAlgorithm(
   if (unbindControllerEvent) {
     unbindControllerEvent();
   }
-  // isSomeRun = true;
   controllerSwitch.innerHTML = '暂停';
   nowController = controller;
   setActiveMenuItem(index);
@@ -290,7 +283,6 @@ export async function runMetaHeuristicAlgorithm(
     const codeContainerHeight = parseFloat(getComputedStyle(codeContainer).height);
     codeBlock.style.top = `${-_index * 22 + codeContainerHeight / 2 - 10}px`;
     await callback();
-    // isSomeRun = controller.isRun;
     controllerSwitch.innerHTML = controller.isRun ? '暂停' : '播放';
   };
 
@@ -299,7 +291,6 @@ export async function runMetaHeuristicAlgorithm(
     codeHighlightBar.style.opacity = '0';
     codeBlock.style.top = '20px';
     setActiveMenuItem(index, true);
-    // isSomeRun = false;
     controllerSwitch.innerHTML = '播放';
     controller.isRun = false;
   };
