@@ -166,7 +166,6 @@ class GA {
  * @returns {TSP}
  */
 export function runTspCode(nodes, runTSPTask, tspDraw) {
-  // TODO: 此处断点可能需要继续添加
   class TSP {
     n = 0;
     life_count = 0;

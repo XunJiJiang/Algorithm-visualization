@@ -5,14 +5,12 @@ import path from 'node:path';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // The built directory structure
-//
-// ├─┬─┬ dist
-// │ │ └── index.html
-// │ │
-// │ ├─┬ dist-electron
+// ├─┬─┬ build
+// ├─┬─┬ dist-electron
 // │ │ ├── main.js
-// │ │ └── preload.mjs
-// │
+// │ │ ├── preload.mjs
+// │ │ ├── index.html
+// │ │ └── doc.html
 process.env.APP_ROOT = path.join(__dirname, '..');
 
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
@@ -51,8 +49,6 @@ function createWindow() {
     win.loadURL(VITE_DEV_SERVER_URL);
     win.webContents.openDevTools();
   } else {
-    // win.loadFile('build/index.html')
-    // TODO: 这里用绝对路径，不然会路径错误。怎么回事？
     win.loadFile('index.html');
   }
 
@@ -77,8 +73,6 @@ function createDocWindow() {
       preload: path.join(__dirname, 'preload.mjs'),
     },
   });
-
-  // docWin.show();
 
   if (VITE_DEV_SERVER_URL) {
     docWin.loadURL(path.join(VITE_DEV_SERVER_URL, 'doc.html'));
