@@ -153,16 +153,18 @@ export function createGraph(edges: [number, number, number][], vertices: string[
           weight,
           label: {
             show: true,
+            color: isTarget ? '#ffffff' : '#ffffff88',
+            textBorderColor: isTarget ? '#ffffff' : '#ffffff00',
+            textBorderType: 'solid',
+            textBorderWidth: 1,
           },
           lineStyle: {
             color: isTarget ? '#ffffff' : '#ffffff88',
             width: isTarget ? 3 : 1,
-            shadowColor: isTarget ? '#ffffffcc' : '#ffffff00',
           },
         };
       });
       chart.setOption({
-        ...baseOption,
         series: [
           {
             data: vertices.map((v, i) => {
@@ -174,7 +176,6 @@ export function createGraph(edges: [number, number, number][], vertices: string[
                 value,
               };
             }),
-            silent: true,
             links,
           },
         ],
