@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import path from 'node:path';
 import electron from 'vite-plugin-electron/simple';
 import react from '@vitejs/plugin-react';
+import { viteStaticCopy as copy } from 'vite-plugin-static-copy';
 
 function imgPath() {
   return {
@@ -40,9 +41,36 @@ export default defineConfig({
             undefined
           : {},
     }),
+    copy({
+      targets: [
+        {
+          src: 'package.json',
+          dest: '',
+          transform(contents) {
+            const json = JSON.parse(contents.toString());
+            json.main = 'main.js';
+            delete json.scripts;
+            const electronV = json.devDependencies.electron;
+            delete json.dependencies;
+            json.devDependencies = {
+              electron: electronV,
+            };
+            json.build.directories.output = path.join('..', json.build.directories.output ?? 'dist-app');
+            return JSON.stringify(json, null, 2);
+          },
+        },
+        {
+          src: 'dist-electron/main.js',
+          dest: '',
+        },
+        {
+          src: 'dist-electron/preload.mjs',
+          dest: '',
+        },
+      ],
+    }),
   ],
   build: {
-    outDir: './build',
     rollupOptions: {
       // ...
       // input:"src/index.js"

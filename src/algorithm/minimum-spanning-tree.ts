@@ -239,7 +239,7 @@ export async function createPrimTaskQueue(
               [deepClone(edgesBetweenSrcObj), deepClone(vertices), src],
               async ([edgesBetweenSrcObj]) => {
                 graph.setEdges(edgesBetweenSrcObj);
-                await sleep(1000);
+                await sleep(500);
               },
             ]);
           }
@@ -339,7 +339,7 @@ export async function createPrimTaskQueue(
         [deepClone(mstree), deepClone(vertices), startVertex],
         async ([mstree]) => {
           graph.setEdges(mstree);
-          await sleep(1000);
+          await sleep(500);
         },
       ]);
       cur = infected.indexOf(vertices[min[0]]) === -1 ? vertices[min[0]] : vertices[min[1]]; // 更新
@@ -350,7 +350,7 @@ export async function createPrimTaskQueue(
       [deepClone(mstree), deepClone(vertices), startVertex],
       async ([mstree]) => {
         graph.setEdges(mstree);
-        await sleep(1000);
+        await sleep(500);
       },
     ]);
 

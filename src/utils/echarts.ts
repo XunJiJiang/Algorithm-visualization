@@ -21,9 +21,11 @@ export const init = () => {
       text: '',
     },
     xAxis: {
-      data: [''],
+      show: false,
     },
-    yAxis: {},
+    yAxis: {
+      show: false,
+    },
     series: [
       {
         silent: true,
@@ -85,12 +87,18 @@ export function createGraph(edges: [number, number, number][], vertices: string[
     name: v,
     x: ((v.charCodeAt(0) - 65) % 3) * 100,
     y: Math.floor((v.charCodeAt(0) - 65) / 3) * 50 + (i % 2 === 1 ? 17 : 0),
+    value: 0,
   }));
-  chart.setOption({
+  const _opt = {
     ...baseOption,
-    xAxis: {
-      type: 'category',
+    visualMap: {
       show: false,
+      min: 0,
+      max: 1,
+      calculable: false,
+      inRange: {
+        color: ['#ffffff77', '#5470c6'],
+      },
     },
     series: [
       {
@@ -104,7 +112,7 @@ export function createGraph(edges: [number, number, number][], vertices: string[
           formatter: function (params: any) {
             return params.data.weight;
           },
-          color: '#ffffffcc',
+          color: '#ffffff88',
         },
         label: {
           show: true,
@@ -118,27 +126,56 @@ export function createGraph(edges: [number, number, number][], vertices: string[
           label: {
             show: true,
           },
+          lineStyle: {
+            color: '#ffffff88',
+            width: 1,
+            shadowColor: '#ffffff00',
+          },
         })),
       },
     ],
-  });
+  };
+
+  chart.setOption(_opt);
 
   return {
-    setEdges: (edges: [number, number, number][]) => {
+    setEdges: (_edges: [number, number, number][]) => {
+      const targetSet = new Set();
+      _edges.forEach(([source, target]) => {
+        targetSet.add(source);
+        targetSet.add(target);
+      });
+      const links = edges.map(([source, target, weight]) => {
+        const isTarget = _edges.findIndex(([s, t]) => s === source && t === target) !== -1;
+        return {
+          source: vertices[source],
+          target: vertices[target],
+          weight,
+          label: {
+            show: true,
+          },
+          lineStyle: {
+            color: isTarget ? '#ffffff' : '#ffffff88',
+            width: isTarget ? 3 : 1,
+            shadowColor: isTarget ? '#ffffffcc' : '#ffffff00',
+          },
+        };
+      });
       chart.setOption({
         ...baseOption,
         series: [
           {
-            data,
+            data: vertices.map((v, i) => {
+              const value = targetSet.has(i) ? 1 : 0;
+              return {
+                name: v,
+                x: ((v.charCodeAt(0) - 65) % 3) * 100,
+                y: Math.floor((v.charCodeAt(0) - 65) / 3) * 50 + (i % 2 === 1 ? 17 : 0),
+                value,
+              };
+            }),
             silent: true,
-            links: edges.map(([source, target, weight]) => ({
-              source: vertices[source],
-              target: vertices[target],
-              weight,
-              label: {
-                show: true,
-              },
-            })),
+            links,
           },
         ],
       });
