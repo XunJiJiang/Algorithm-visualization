@@ -174,9 +174,9 @@ export class TSPController implements CodeController {
     this.isRun = true;
     this.tspInstance.start();
   };
-  pause = () => {
+  pause = (isTSPInsRun = false) => {
     if (!this.tspInstance) return;
-    this.tspInstance.stop();
+    !isTSPInsRun && this.tspInstance.stop();
     this.stop && this.stop();
     this.isRun = false;
   };
@@ -208,6 +208,7 @@ type TspSet = {
 
 export async function createTSP(nodes: Node[], controller: TSPController) {
   const tspDraw: TspSet = createCoordinateMap(nodes);
+  tspDraw.onStop = controller.pause.bind(controller, true);
   const tspInstance = runTspCode(
     nodes,
     async (index: number, paths: PathList, callback: (paths: PathList) => Promise<void>) => {
