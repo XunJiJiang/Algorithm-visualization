@@ -357,7 +357,7 @@ export function createCoordinateMap(map: CoordinateMap[]) {
 }
 
 // 为了可视化棋盘覆盖问题，为echarts注册2^2-2^6(边长)的自定义地图
-for (let power = 2; power <= 6; power++) {
+for (let power = 2; power <= 5; power++) {
   const len = 2 ** power;
   echarts.registerMap(
     `grid-cover-2^${power}`,
