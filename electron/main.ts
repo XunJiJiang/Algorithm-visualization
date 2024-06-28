@@ -22,6 +22,8 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 
 let win: BrowserWindow | null;
 
+let docWin: BrowserWindow | null;
+
 function createWindow() {
   win = new BrowserWindow({
     width: 1024,
@@ -56,23 +58,60 @@ function createWindow() {
     shell.openExternal(url);
   });
 
-  ipcMain.on('open-doc', createDocWindow);
+  ipcMain.on('open-doc', () => {
+    if (!docWin) {
+      createDocWindow();
+    } else {
+      docWin.close();
+    }
+  });
+
+  // TODO: 乱搞
+  // win?.setBounds({ x: 100, y: 100, width: 1024, height: 600 });
+
+  // win.on('moved', () => {
+  //   win?.setBounds({ x: 100, y: 100, width: 1024, height: 600 });
+  // });
+
+  // win.on('resized', () => {
+  //   win?.setBounds({ x: 100, y: 100, width: 1024, height: 600 });
+  // });
+
+  // win.on('minimize', () => {
+  //   setTimeout(() => {
+  //     win?.maximize();
+  //   }, 1000);
+  // });
+
+  // win.on('maximize', () => {
+  //   setTimeout(() => {
+  //     win?.unmaximize();
+  //   }, 1000);
+  // });
+
+  // win.on('closed', () => {
+  //   createWindow();
+  // });
+  // TODO: 乱搞
 }
 
 function createDocWindow() {
   if (!win) return;
-  const docWin = new BrowserWindow({
+  docWin = new BrowserWindow({
     parent: win,
-    modal: true,
-    width: 1024,
+    width: win?.getSize()[0],
     minWidth: 880,
-    height: 700,
+    height: win?.getSize()[1],
     minHeight: 400,
+    x: win?.getPosition()[0] - win?.getSize()[0],
+    y: win?.getPosition()[1],
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
     },
   });
+
+  docWin.menuBarVisible = false;
 
   if (VITE_DEV_SERVER_URL) {
     docWin.loadURL(path.join(VITE_DEV_SERVER_URL, 'doc.html'));
@@ -80,6 +119,37 @@ function createDocWindow() {
   } else {
     docWin.loadFile('doc.html');
   }
+
+  const setDocWinBounds = () => {
+    const winX = win?.getPosition()[0] || 100;
+    const winY = win?.getPosition()[1] || 100;
+    const winWidth = win?.getSize()[0] || 1024;
+    const winHeight = win?.getSize()[1] || 600;
+    docWin?.setBounds({ x: winX - winWidth, y: winY, width: winWidth, height: winHeight }, true);
+  };
+
+  const setWinBounds = () => {
+    const docX = docWin?.getPosition()[0] || 100;
+    const docY = docWin?.getPosition()[1] || 100;
+    const docWidth = docWin?.getSize()[0] || 1024;
+    const docHeight = docWin?.getSize()[1] || 600;
+    win?.setBounds({ x: docX + docWidth, y: docY, width: docWidth, height: docHeight }, true);
+  };
+
+  docWin.on('resize', setWinBounds);
+
+  docWin.on('move', setWinBounds);
+
+  win.on('resize', setDocWinBounds);
+
+  win.on('move', setDocWinBounds);
+
+  docWin.on('closed', () => {
+    win?.removeListener('resize', setDocWinBounds);
+    win?.removeListener('move', setDocWinBounds);
+    docWin?.removeAllListeners();
+    docWin = null;
+  });
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
