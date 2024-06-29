@@ -120,51 +120,51 @@ function createDocWindow() {
     docWin.loadFile('doc.html');
   }
 
-  const winCheck = () => {
-    if (
-      win?.isMaximized() ||
-      win?.isMinimized() ||
-      win?.isFullScreen() ||
-      docWin?.isMaximized() ||
-      docWin?.isMinimized() ||
-      docWin?.isFullScreen()
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  };
+  // const winCheck = () => {
+  //   if (
+  //     win?.isMaximized() ||
+  //     win?.isMinimized() ||
+  //     win?.isFullScreen() ||
+  //     docWin?.isMaximized() ||
+  //     docWin?.isMinimized() ||
+  //     docWin?.isFullScreen()
+  //   ) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // };
 
-  const setDocWinBounds = () => {
-    if (!winCheck()) return;
-    const winX = win?.getPosition()[0] || 100;
-    const winY = win?.getPosition()[1] || 100;
-    const docWidth = docWin?.getSize()[0] || 1024;
-    docWin?.setBounds({ x: winX - docWidth, y: winY }, true);
-  };
+  // const setDocWinBounds = () => {
+  //   if (!winCheck()) return;
+  //   const winX = win?.getPosition()[0] || 100;
+  //   const winY = win?.getPosition()[1] || 100;
+  //   const docWidth = docWin?.getSize()[0] || 1024;
+  //   docWin?.setBounds({ x: winX - docWidth, y: winY }, true);
+  // };
 
-  const setWinBounds = () => {
-    if (!winCheck()) return;
-    const docX = docWin?.getPosition()[0] || 100;
-    const docY = docWin?.getPosition()[1] || 100;
-    const docWidth = docWin?.getSize()[0] || 1024;
-    win?.setBounds({ x: docX + docWidth, y: docY }, true);
-  };
+  // const setWinBounds = () => {
+  //   if (!winCheck()) return;
+  //   const docX = docWin?.getPosition()[0] || 100;
+  //   const docY = docWin?.getPosition()[1] || 100;
+  //   const docWidth = docWin?.getSize()[0] || 1024;
+  //   win?.setBounds({ x: docX + docWidth, y: docY }, true);
+  // };
 
-  docWin.on('resized', setWinBounds);
+  // docWin.on('resized', setWinBounds);
 
-  docWin.on('move', setWinBounds);
+  // docWin.on('move', setWinBounds);
 
-  win.on('resized', setDocWinBounds);
+  // win.on('resized', setDocWinBounds);
 
-  win.on('move', setDocWinBounds);
+  // win.on('move', setDocWinBounds);
 
-  docWin.on('closed', () => {
-    win?.removeListener('resized', setDocWinBounds);
-    win?.removeListener('move', setDocWinBounds);
-    docWin?.removeAllListeners();
-    docWin = null;
-  });
+  // docWin.on('closed', () => {
+  //   win?.removeListener('resized', setDocWinBounds);
+  //   win?.removeListener('move', setDocWinBounds);
+  //   docWin?.removeAllListeners();
+  //   docWin = null;
+  // });
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
