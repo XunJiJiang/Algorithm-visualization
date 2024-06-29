@@ -4,11 +4,11 @@ import { loadingControl } from './utils/loading';
 
 eventRun();
 
-loadingControl(true);
+loadingControl(true, false);
 
 setTimeout(() => {
-  loadingControl(false);
-}, 2000);
+  loadingControl(false, true);
+}, 1000);
 
 // Use contextBridge
 // window.ipcRenderer.on('main-process-message', (_event, message) => {});

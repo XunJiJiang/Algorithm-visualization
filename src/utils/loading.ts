@@ -32,6 +32,7 @@ function visible(diameter: number, hasTransition: boolean) {
 }
 
 function invisible(diameter: number, hasTransition: boolean) {
+  loadingRound1.style.transition = hasTransition ? 'all 1s' : 'none';
   setTimeout(() => {
     loadingRound1.style.setProperty('--diameter', `${diameter + 1000}px`);
   }, 0);
@@ -43,7 +44,6 @@ function invisible(diameter: number, hasTransition: boolean) {
     loadingContainer.style.opacity = '0';
   }, 200);
   setTimeout(() => {
-    loadingRound1.style.transition = hasTransition ? 'all 1s' : 'none';
     loadingRound1.style.animationName = 'none';
     loadingContainer.style.height = '0';
   }, 1200);
