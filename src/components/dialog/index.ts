@@ -77,7 +77,6 @@ export const createDialog = (
   };
   // 随机
   btn[1].onclick = () => {
-    console.log('随机');
     resolve(renderFunc());
   };
   // 提交
