@@ -13,9 +13,8 @@ type DialogCompObj = {
   placeholder: string;
   min?: number;
   max?: number;
-  // 正则验证
   pattern?: string;
-  check?: (value: string | number, ...args: any[]) => boolean;
+  check?: (value: string | number, ...args: any[]) => boolean | string;
   input?: HTMLInputElement;
 };
 
@@ -85,10 +84,11 @@ export const createDialog = (
     const values = [] as any[];
     comp.forEach(item => {
       const input = item.input as HTMLInputElement;
-      if (item.check && !item.check(input.value, ...values)) {
+      const _checkValue = (item.check && item.check(input.value, ...values)) ?? true;
+      if (_checkValue === false || typeof _checkValue === 'string') {
         Msg.message({
           type: 'error',
-          message: `${item.label}输入不合法`,
+          message: _checkValue ? _checkValue : `${item.label}输入不合法`,
         });
         isCheck = false;
         return;

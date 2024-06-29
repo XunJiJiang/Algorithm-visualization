@@ -319,14 +319,10 @@ export async function runQuickSort() {
         check: (value: string | number) => {
           if (typeof value !== 'string') return false;
           const arr = value.split(',').map(Number);
-
-          return (
-            arr.length >= 5 &&
-            arr.length <= 15 &&
-            arr.every(v => {
-              return v >= 1;
-            })
-          );
+          if (arr.length < 5) return '数组长度不能小于5';
+          if (arr.length > 15) return '数组长度不能大于15';
+          if (!arr.every(v => v >= 1)) return '数组任意值不能小于1';
+          return true;
         },
       },
     ],
@@ -384,14 +380,10 @@ export async function runBubbleSort() {
         check: (value: string | number) => {
           if (typeof value !== 'string') return false;
           const arr = value.split(',').map(Number);
-
-          return (
-            arr.length >= 5 &&
-            arr.length <= 15 &&
-            arr.every(v => {
-              return v >= 1;
-            })
-          );
+          if (arr.length < 5) return '数组长度不能小于5';
+          if (arr.length > 15) return '数组长度不能大于15';
+          if (!arr.every(v => v >= 1)) return '数组任意值不能小于1';
+          return true;
         },
       },
     ],
@@ -446,7 +438,10 @@ export async function runMinimumSpanningTree() {
         max: 6,
         check: (value: string | number) => {
           const _val = Number(value);
-          return typeof _val === 'number' && _val >= 4 && _val <= 6;
+          if (typeof _val !== 'number') return '请输入数字';
+          if (_val < 4) return '顶点数量不能小于4';
+          if (_val > 6) return '顶点数量不能大于6';
+          return true;
         },
       },
       {
@@ -459,7 +454,13 @@ export async function runMinimumSpanningTree() {
           if (typeof value !== 'string') return false;
           const verticesNum = args[0] as number;
           const arr = value.split(',').map(Number);
-          return arr.length === (verticesNum ** 2 - verticesNum) / 2 && arr.every(v => v >= 1);
+          console.log(verticesNum, (verticesNum ** 2 - verticesNum) / 2);
+          if (arr.length !== (verticesNum ** 2 - verticesNum) / 2)
+            return `边的数量不正确, 应该为 ${
+              isNaN((verticesNum ** 2 - verticesNum) / 2) ? 0 : (verticesNum ** 2 - verticesNum) / 2
+            } 条边`;
+          if (!arr.every(v => v >= 1)) return '边的权值不能小于1';
+          return true;
         },
       },
     ],
@@ -541,7 +542,10 @@ export async function runHuffmanTree() {
         pattern: '^[A-H]+$',
         check: (value: string | number) => {
           if (typeof value !== 'string') return false;
-          return /^[A-H]+$/.test(value) && value.length <= 31 && value.length >= 22;
+          if (value.length < 22) return '字符串长度不能小于22';
+          if (value.length > 31) return '字符串长度不能大于31';
+          if (!/^[A-H]+$/.test(value)) return '字符串只能包含A-H';
+          return true;
         },
       },
     ],
@@ -636,23 +640,29 @@ export async function runGridCover() {
       {
         type: 'number',
         value: 1,
-        label: '特殊点行',
-        placeholder: '特殊点行',
+        label: '特殊点y',
+        placeholder: '特殊点y',
         check: (value: string | number, ...args) => {
           const k = args[0];
           const _val = Number(value);
-          return typeof _val === 'number' && _val >= 1 && _val <= 2 ** k;
+          if (typeof _val !== 'number') return '请输入数字';
+          if (_val < 1) return '特殊点y不能小于1';
+          if (_val > 2 ** k) return `特殊点y不能大于2^${k}`;
+          return true;
         },
       },
       {
         type: 'number',
         value: 1,
-        label: '特殊点列',
-        placeholder: '特殊点列',
+        label: '特殊点x',
+        placeholder: '特殊点x',
         check: (value: string | number, ...args) => {
           const k = args[0];
           const _val = Number(value);
-          return typeof _val === 'number' && _val >= 1 && _val <= 2 ** k;
+          if (typeof _val !== 'number') return '请输入数字';
+          if (_val < 1) return '特殊点x不能小于1';
+          if (_val > 2 ** k) return `特殊点x不能大于2^${k}`;
+          return true;
         },
       },
     ],
