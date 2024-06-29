@@ -449,17 +449,33 @@ export async function runMinimumSpanningTree() {
           return typeof _val === 'number' && _val >= 4 && _val <= 6;
         },
       },
+      {
+        type: 'text',
+        value: '',
+        label: '边值',
+        placeholder: '例2, 5, 4, 7, 3, 4, 2...',
+        pattern: '^\\d+(,\\s*\\d+)*$',
+        check: (value: string | number, ...args) => {
+          if (typeof value !== 'string') return false;
+          const verticesNum = args[0] as number;
+          const arr = value.split(',').map(Number);
+          return arr.length === (verticesNum ** 2 - verticesNum) / 2 && arr.every(v => v >= 1);
+        },
+      },
     ],
     props => {
       const verticesNum = Number(props[0]);
       const vertices = Array.from({ length: verticesNum }, (_, i) => String.fromCharCode(i + 65));
       const edges: Edge[] = [];
+      const valArr = props[1].split(',').map(Number);
+      let valIndex = 0;
       // 生成全连接的图
       Array.from({ length: verticesNum ** 2 }, (_, i) => {
         const from = Math.floor(i / verticesNum);
         const to = i % verticesNum;
         if (from >= to) return null;
-        edges.push([from, to, Math.floor(Math.random() * 8) + 1]);
+        console.log(i);
+        edges.push([from, to, valArr[valIndex++]]);
       });
       Notify.notification({
         title: '已生成随机参数',
