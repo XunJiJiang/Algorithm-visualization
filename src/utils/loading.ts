@@ -18,7 +18,7 @@ function loadingControl(isVisible = true, hasTransition = true) {
 function visible(diameter: number, hasTransition: boolean) {
   loadingContainer.style.height = '';
   setTimeout(() => {
-    loadingRound1.style.transition = hasTransition ? 'all 1s' : 'none';
+    loadingRound1.style.transition = hasTransition ? 'all 0.7s' : 'none';
     loadingRound1.style.animationName = 'scaleAnimation';
     loadingContainer.style.opacity = '1';
     loadingRound3.style.setProperty('--diameter', `${diameter * 0.35}px`);
