@@ -13,6 +13,7 @@ import { createGridCoverTaskQueue, GridCoverController, getGridCoverCodeTree } f
 import { getTSPcode, createTSP, TSPController } from '../algorithm/TSP';
 import hljs from 'highlight.js';
 import { throttle } from './throttle';
+import { createDialog } from '../components/dialog/index.js';
 import 'highlight.js/styles/atom-one-dark.css';
 // @ts-ignore
 import Msg from '../components/message/index.js';
@@ -118,6 +119,17 @@ window.addEventListener(
 /** 是否正在切换算法 */
 let isSwitch = false;
 
+function isSwitchAlgorithm() {
+  if (isSwitch) {
+    Msg.message({
+      message: '正在切换算法',
+      type: 'warning',
+      duration: 500,
+    });
+  }
+  return isSwitch;
+}
+
 /**
  * 运行精确的算法
  * @param index 页面显示的按钮的索引
@@ -132,14 +144,7 @@ export async function runExactAlgorithm(
   createTaskQueue: () => Promise<void>,
   controller: CodeController
 ) {
-  if (isSwitch) {
-    Msg.message({
-      message: '正在切换算法',
-      type: 'warning',
-      duration: 500,
-    });
-    return;
-  }
+  if (isSwitchAlgorithm()) return;
   await new Promise(resolve => {
     isSwitch = true;
     back();
@@ -227,14 +232,7 @@ export async function runMetaHeuristicAlgorithm(
   createTask: () => Promise<void>,
   controller: CodeController
 ) {
-  if (isSwitch) {
-    Msg.message({
-      message: '正在切换算法',
-      type: 'warning',
-      duration: 500,
-    });
-    return;
-  }
+  if (isSwitchAlgorithm()) return;
   await new Promise(resolve => {
     isSwitch = true;
     back();
@@ -306,16 +304,56 @@ const highlightQuickSort = highlight(getQuickSortCodeTree().join('\n'), {
  *  快速排序
  */
 export async function runQuickSort() {
-  const len = Math.floor(Math.random() * 10) + 5;
-  const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10) + 1);
+  if (isSwitchAlgorithm()) return;
+
+  const dialog = createDialog(
+    [
+      {
+        type: 'text',
+        value: '6, 5, 4, 3, 2, 1',
+        label: '数组值',
+        placeholder: '例6, 5, 4, 3, 2, 1',
+        min: 5,
+        max: 15,
+        pattern: '^\\d+(,\\s*\\d+)*$',
+        check: (value: string | number) => {
+          if (typeof value !== 'string') return false;
+          const arr = value.split(',').map(Number);
+
+          return (
+            arr.length >= 5 &&
+            arr.length <= 15 &&
+            arr.every(v => {
+              return v >= 1;
+            })
+          );
+        },
+      },
+    ],
+    props => {
+      const arr = props[0].split(',').map(Number);
+      return arr;
+    },
+    () => {
+      const len = Math.floor(Math.random() * 10) + 5;
+      const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10) + 1);
+      Notify.notification({
+        title: '已生成随机参数',
+        message: `[${arr.join(', ')}]`,
+        duration: 3000,
+        type: 'info',
+      });
+      return arr;
+    },
+    () => {}
+  );
+
+  const arr = (await dialog) as number[];
+
+  // const len = Math.floor(Math.random() * 10) + 5;
+  // const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10) + 1);
   const controller = new SortController();
-  !isSwitch &&
-    Notify.notification({
-      title: '已生成随机参数',
-      message: `[${arr.join(', ')}]`,
-      duration: 3000,
-      type: 'info',
-    });
+
   await runExactAlgorithm(
     5,
     highlightQuickSort,
@@ -332,16 +370,52 @@ const highlightBubbleSort = highlight(getBubbleSortCodeTree().join('\n'), {
  *  冒泡排序
  */
 export async function runBubbleSort() {
-  const len = Math.floor(Math.random() * 10) + 5;
-  const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10) + 1);
+  if (isSwitchAlgorithm()) return;
+  const dialog = createDialog(
+    [
+      {
+        type: 'text',
+        value: '6, 5, 4, 3, 2, 1',
+        label: '数组值',
+        placeholder: '例6, 5, 4, 3, 2, 1',
+        min: 5,
+        max: 15,
+        pattern: '^\\d+(,\\s*\\d+)*$',
+        check: (value: string | number) => {
+          if (typeof value !== 'string') return false;
+          const arr = value.split(',').map(Number);
+
+          return (
+            arr.length >= 5 &&
+            arr.length <= 15 &&
+            arr.every(v => {
+              return v >= 1;
+            })
+          );
+        },
+      },
+    ],
+    props => {
+      const arr = props[0].split(',').map(Number);
+      return arr;
+    },
+    () => {
+      const len = Math.floor(Math.random() * 10) + 5;
+      const arr = Array.from({ length: len }, () => Math.floor(Math.random() * 10) + 1);
+      Notify.notification({
+        title: '已生成随机参数',
+        message: `[${arr.join(', ')}]`,
+        duration: 3000,
+        type: 'info',
+      });
+      return arr;
+    },
+    () => {}
+  );
+
+  const arr = (await dialog) as number[];
   const controller = new SortController();
-  !isSwitch &&
-    Notify.notification({
-      title: '已生成随机参数',
-      message: `[${arr.join(', ')}]`,
-      duration: 3000,
-      type: 'info',
-    });
+
   await runExactAlgorithm(
     6,
     highlightBubbleSort,
@@ -360,26 +434,69 @@ const highlightPrim = highlight(getPrimCodeTree().join('\n'), {
  * 最小生成树
  */
 export async function runMinimumSpanningTree() {
-  const verticesNum = Math.floor(Math.random() * 3) + 4;
-  // 通过asc2 码转换为字母，A-Z
-  const vertices = Array.from({ length: verticesNum }, (_, i) => String.fromCharCode(i + 65));
-  const edges: Edge[] = [];
-  // 生成全连接的图
-  Array.from({ length: verticesNum ** 2 }, (_, i) => {
-    const from = Math.floor(i / verticesNum);
-    const to = i % verticesNum;
-    if (from >= to) return null;
-    edges.push([from, to, Math.floor(Math.random() * 8) + 1]);
-  });
-  !isSwitch &&
-    Notify.notification({
-      title: '已生成随机参数',
-      message: `顶点: [${vertices.join(', ')}], 边: [${edges
-        .map(edge => `[${vertices[edge[0]]}-${edge[2]}-${vertices[edge[1]]}]`)
-        .join(', ')}]`,
-      duration: 3000,
-      type: 'info',
-    });
+  if (isSwitchAlgorithm()) return;
+  const dialog = createDialog(
+    [
+      {
+        type: 'number',
+        value: 6,
+        label: '顶点数量',
+        placeholder: '顶点数量',
+        min: 4,
+        max: 6,
+        check: (value: string | number) => {
+          const _val = Number(value);
+          return typeof _val === 'number' && _val >= 4 && _val <= 6;
+        },
+      },
+    ],
+    props => {
+      const verticesNum = Number(props[0]);
+      const vertices = Array.from({ length: verticesNum }, (_, i) => String.fromCharCode(i + 65));
+      const edges: Edge[] = [];
+      // 生成全连接的图
+      Array.from({ length: verticesNum ** 2 }, (_, i) => {
+        const from = Math.floor(i / verticesNum);
+        const to = i % verticesNum;
+        if (from >= to) return null;
+        edges.push([from, to, Math.floor(Math.random() * 8) + 1]);
+      });
+      Notify.notification({
+        title: '已生成随机参数',
+        message: `顶点: [${vertices.join(', ')}], 边: [${edges
+          .map(edge => `[${vertices[edge[0]]}-${edge[2]}-${vertices[edge[1]]}]`)
+          .join(', ')}]`,
+        duration: 3000,
+        type: 'info',
+      });
+      return [edges, vertices];
+    },
+    () => {
+      const verticesNum = Math.floor(Math.random() * 3) + 4;
+      // 通过asc2 码转换为字母，A-Z
+      const vertices = Array.from({ length: verticesNum }, (_, i) => String.fromCharCode(i + 65));
+      const edges: Edge[] = [];
+      // 生成全连接的图
+      Array.from({ length: verticesNum ** 2 }, (_, i) => {
+        const from = Math.floor(i / verticesNum);
+        const to = i % verticesNum;
+        if (from >= to) return null;
+        edges.push([from, to, Math.floor(Math.random() * 8) + 1]);
+      });
+      Notify.notification({
+        title: '已生成随机参数',
+        message: `顶点: [${vertices.join(', ')}], 边: [${edges
+          .map(edge => `[${vertices[edge[0]]}-${edge[2]}-${vertices[edge[1]]}]`)
+          .join(', ')}]`,
+        duration: 3000,
+        type: 'info',
+      });
+      return [edges, vertices];
+    },
+    () => {}
+  );
+
+  const [edges, vertices] = (await dialog) as [Edge[], string[]];
   const controller = new PrimController();
   await runExactAlgorithm(
     1,
@@ -397,16 +514,39 @@ const highlightHuffmanTree = highlight(getHuffmanTreeCodeTree().join('\n'), {
  * 哈夫曼树构造问题
  */
 export async function runHuffmanTree() {
-  const len = Math.floor(Math.random() * 10) + 22;
-  // 只生成A-H的字符串
-  const str = Array.from({ length: len }, () => String.fromCharCode(Math.floor(Math.random() * 8) + 65)).join('');
-  !isSwitch &&
-    Notify.notification({
-      title: '已生成随机参数',
-      message: str,
-      duration: 3000,
-      type: 'info',
-    });
+  if (isSwitchAlgorithm()) return;
+  const dialog = createDialog(
+    [
+      {
+        type: 'text',
+        value: 'AAABBBCCCDDDEEEFFFGGGHHH',
+        label: '字符串\n(A-H, 长度22-31)',
+        placeholder: '字符串',
+        pattern: '^[A-H]+$',
+        check: (value: string | number) => {
+          if (typeof value !== 'string') return false;
+          return /^[A-H]+$/.test(value) && value.length <= 31 && value.length >= 22;
+        },
+      },
+    ],
+    props => {
+      return props[0];
+    },
+    () => {
+      const len = Math.floor(Math.random() * 10) + 22;
+      // 只生成A-H的字符串
+      const str = Array.from({ length: len }, () => String.fromCharCode(Math.floor(Math.random() * 8) + 65)).join('');
+      Notify.notification({
+        title: '已生成随机参数',
+        message: str,
+        duration: 3000,
+        type: 'info',
+      });
+      return str;
+    },
+    () => {}
+  );
+  const str = (await dialog) as string;
   const controller = new HuffmanTreeController();
   await runExactAlgorithm(
     2,
@@ -424,6 +564,7 @@ const highlightTSP = highlight(getTSPcode().join('\n'), {
  * 旅行商(TSP)问题
  */
 export async function runTSP() {
+  if (isSwitchAlgorithm()) return;
   // 城市数量
   const len = Math.floor(Math.random() * 15) + 25;
   // 城市编码 城市01-20
@@ -436,13 +577,17 @@ export async function runTSP() {
     x: Math.floor(Math.random() * 600),
     y: Math.floor(Math.random() * 200),
   }));
-  !isSwitch &&
-    Notify.notification({
-      title: '已生成随机参数',
-      message: `[${cities.map(city => `${city.name}(${city.x}, ${city.y})`).join(', ')}]`,
-      duration: 3000,
-      type: 'info',
-    });
+  Msg.message({
+    message: '参数较多, 暂不提供输入指定参数',
+    type: 'info',
+    duration: 1500,
+  });
+  Notify.notification({
+    title: '已生成随机参数',
+    message: `[${cities.map(city => `${city.name}(${city.x}, ${city.y})`).join(', ')}]`,
+    duration: 3000,
+    type: 'info',
+  });
   const controller = new TSPController();
 
   await runMetaHeuristicAlgorithm(
@@ -461,16 +606,59 @@ const highlightGridCover = highlight(getGridCoverCodeTree().join('\n'), {
  * 棋盘覆盖问题
  */
 export async function runGridCover() {
-  const k = Math.floor(Math.random() * 4) + 2;
-  const row = Math.floor(Math.random() * 2 ** k) + 1;
-  const col = Math.floor(Math.random() * 2 ** k) + 1;
-  !isSwitch &&
-    Notify.notification({
-      title: '已生成随机参数',
-      message: `k: ${k}, 特殊点: [${col}, ${row}]`,
-      duration: 3000,
-      type: 'info',
-    });
+  if (isSwitchAlgorithm()) return;
+  const dialog = createDialog(
+    [
+      {
+        type: 'number',
+        value: 3,
+        label: 'k值',
+        placeholder: 'k值',
+        min: 2,
+        max: 5,
+      },
+      {
+        type: 'number',
+        value: 1,
+        label: '特殊点行',
+        placeholder: '特殊点行',
+        check: (value: string | number, ...args) => {
+          const k = args[0];
+          const _val = Number(value);
+          return typeof _val === 'number' && _val >= 1 && _val <= 2 ** k;
+        },
+      },
+      {
+        type: 'number',
+        value: 1,
+        label: '特殊点列',
+        placeholder: '特殊点列',
+        check: (value: string | number, ...args) => {
+          const k = args[0];
+          const _val = Number(value);
+          return typeof _val === 'number' && _val >= 1 && _val <= 2 ** k;
+        },
+      },
+    ],
+    props => {
+      return props.map(Number);
+    },
+    () => {
+      const k = Math.floor(Math.random() * 4) + 2;
+      const row = Math.floor(Math.random() * 2 ** k) + 1;
+      const col = Math.floor(Math.random() * 2 ** k) + 1;
+
+      Notify.notification({
+        title: '已生成随机参数',
+        message: `k: ${k}, 特殊点: [${col}, ${row}]`,
+        duration: 3000,
+        type: 'info',
+      });
+      return [k, row, col];
+    },
+    () => {}
+  );
+  const [k, row, col] = (await dialog) as [number, number, number];
   const controller = new GridCoverController();
   await runExactAlgorithm(
     7,

@@ -49,6 +49,20 @@
         <div id="controller-switch" class="controller-btn">播放</div>
         <div id="controller-next" class="controller-btn">下一步</div>
       </div>
+      <div id="dialog-container">
+        <div id="dialog">
+          <div id="dialog-title">算法参数</div>
+          <div id="dialog-content">
+            <form id="dialog-form"></form>
+          </div>
+          <div id="dialog-btn-container">
+            <a id="dialog-btn-cancel" class="dialog-btn btn btn-info">取消</a>
+            <a id="dialog-btn-cancel" class="dialog-btn btn btn-info">随机</a>
+            <a id="dialog-btn-confirm" class="dialog-btn btn btn-primary">确定</a>
+          </div>
+        </div>
+        <div id="dialog-bottom"></div>
+      </div>
     </div>
     <div id="loading-container">
       <div id="loadingRound1">
@@ -57,6 +71,7 @@
         </div>
       </div>
     </div>
+
     <div id="drag-root"></div>
     <script type="module" src="/src/index.ts"></script>
   </body>
