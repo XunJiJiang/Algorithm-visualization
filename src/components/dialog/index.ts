@@ -41,7 +41,7 @@ export const createDialog = (
   cancelFunc: () => void
 ) => {
   dialogForm.innerHTML = '';
-  comp.forEach(item => {
+  comp.forEach((item, index) => {
     const div = document.createElement('div');
     const label = document.createElement('label');
     const input = document.createElement('input');
@@ -55,6 +55,22 @@ export const createDialog = (
       input.max = (item.max ?? 10).toString();
     } else {
       input.pattern = item.pattern ?? '.*';
+    }
+
+    if (index === comp.length - 1) {
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          dialogForm.dispatchEvent(new Event('submit'));
+        }
+      });
+    } else {
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const nextInput = comp[index + 1].input as HTMLInputElement;
+          nextInput.focus();
+        }
+      });
     }
     div.appendChild(label);
     div.appendChild(input);
