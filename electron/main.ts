@@ -20,9 +20,49 @@ export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'build');
 
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST;
 
+let startWin: BrowserWindow | null;
+
 let win: BrowserWindow | null;
 
 let docWin: BrowserWindow | null;
+
+function createStartWindow() {
+  startWin = new BrowserWindow({
+    width: 200,
+    minWidth: 200,
+    height: 200,
+    minHeight: 200,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: false,
+    transparent: true,
+    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.mjs'),
+    },
+  });
+
+  if (VITE_DEV_SERVER_URL) {
+    startWin.loadURL(path.join(VITE_DEV_SERVER_URL, 'start-load.html'));
+    startWin.webContents.openDevTools();
+  } else {
+    startWin.loadFile('start-load.html');
+  }
+
+  createWindow();
+
+  win?.once('ready-to-show', () => {
+    setTimeout(() => {
+      startWin?.close();
+      setTimeout(() => {
+        win?.show();
+      }, 200);
+    }, 300);
+  });
+
+  startWin.on('closed', () => {
+    startWin = null;
+  });
+}
 
 function createWindow() {
   win = new BrowserWindow({
@@ -41,10 +81,6 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.mjs'),
     },
     show: false,
-  });
-
-  win.once('ready-to-show', () => {
-    win?.show();
   });
 
   // Test active push message to Renderer-process.
@@ -186,8 +222,8 @@ app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    createStartWindow();
   }
 });
 
-app.whenReady().then(createWindow);
+app.whenReady().then(createStartWindow);
