@@ -80,6 +80,10 @@ export const createDialog = (
   };
   // 提交
   btn[2].onclick = () => {
+    dialogForm.dispatchEvent(new Event('submit'));
+  };
+  dialogForm.onsubmit = e => {
+    e.preventDefault();
     let isCheck = true;
     const values = [] as any[];
     comp.forEach(item => {
@@ -97,10 +101,6 @@ export const createDialog = (
       input.setCustomValidity('');
     });
     if (!isCheck) return;
-    dialogForm.dispatchEvent(new Event('submit'));
-  };
-  dialogForm.onsubmit = e => {
-    e.preventDefault();
     const data = new FormData(dialogForm);
     const obj = {} as any;
     for (const [key, value] of data.entries()) {
