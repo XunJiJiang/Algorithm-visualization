@@ -57,13 +57,15 @@ function createStartWindow() {
   let isShowStartWin = false;
   let isReadyShowWin = false;
 
+  let timeout = 0;
+
   function tryShowWin() {
-    console.log('tryShowWin', isShowStartWin, isReadyShowWin);
-    if (isShowStartWin && isReadyShowWin) {
+    if ((isShowStartWin && isReadyShowWin) || timeout > 3000) {
       startWin?.close();
       win?.show();
     } else {
       setTimeout(() => {
+        timeout += 300;
         tryShowWin();
       }, 300);
     }
