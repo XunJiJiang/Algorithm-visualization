@@ -77,6 +77,7 @@ export default defineConfig({
       input: {
         main: 'index.html',
         doc: 'doc.html',
+        start: 'start-load.html',
       },
     },
   },

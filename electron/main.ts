@@ -30,11 +30,15 @@ function createStartWindow() {
   startWin = new BrowserWindow({
     width: 200,
     minWidth: 200,
+    maxWidth: 200,
+    maxHeight: 200,
     height: 200,
     minHeight: 200,
     titleBarStyle: 'hidden',
     titleBarOverlay: false,
     transparent: true,
+    resizable: false,
+    frame: false,
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
@@ -43,19 +47,24 @@ function createStartWindow() {
 
   if (VITE_DEV_SERVER_URL) {
     startWin.loadURL(path.join(VITE_DEV_SERVER_URL, 'start-load.html'));
-    startWin.webContents.openDevTools();
+    // startWin.webContents.openDevTools();
   } else {
     startWin.loadFile('start-load.html');
   }
 
   createWindow();
 
+  setTimeout(() => {
+    if (startWin) {
+      startWin?.close();
+      win?.show();
+    }
+  }, 5000);
+
   win?.once('ready-to-show', () => {
     setTimeout(() => {
       startWin?.close();
-      setTimeout(() => {
-        win?.show();
-      }, 200);
+      win?.show();
     }, 300);
   });
 
@@ -88,6 +97,10 @@ function createWindow() {
     win?.webContents.send('main-process-message', new Date().toLocaleString());
   });
 
+  // win.on('ready-to-show', () => {
+  //   win?.show();
+  // });
+
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
     win.webContents.openDevTools();
@@ -105,6 +118,13 @@ function createWindow() {
     } else {
       docWin.close();
     }
+  });
+
+  win.on('closed', () => {
+    app.quit();
+    win = null;
+    docWin = null;
+    startWin = null;
   });
 
   // TODO: 乱搞
@@ -215,6 +235,8 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
     win = null;
+    docWin = null;
+    startWin = null;
   }
 });
 
