@@ -54,18 +54,30 @@ function createStartWindow() {
 
   createWindow();
 
-  setTimeout(() => {
-    if (startWin) {
+  let isShowStartWin = false;
+  let isReadyShowWin = false;
+
+  function tryShowWin() {
+    console.log('tryShowWin', isShowStartWin, isReadyShowWin);
+    if (isShowStartWin && isReadyShowWin) {
       startWin?.close();
       win?.show();
+    } else {
+      setTimeout(() => {
+        tryShowWin();
+      }, 300);
     }
-  }, 5000);
+  }
+
+  // TODO: 现在有可能卡在启动窗口，而不显示主窗口
+  tryShowWin();
+
+  startWin?.once('ready-to-show', () => {
+    isShowStartWin = true;
+  });
 
   win?.once('ready-to-show', () => {
-    setTimeout(() => {
-      startWin?.close();
-      win?.show();
-    }, 300);
+    isReadyShowWin = true;
   });
 
   startWin.on('closed', () => {
