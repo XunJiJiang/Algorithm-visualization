@@ -454,7 +454,6 @@ export async function runMinimumSpanningTree() {
           if (typeof value !== 'string') return false;
           const verticesNum = args[0] as number;
           const arr = value.split(',').map(Number);
-          console.log(verticesNum, (verticesNum ** 2 - verticesNum) / 2);
           if (arr.length !== (verticesNum ** 2 - verticesNum) / 2)
             return `边的数量不正确, 应该为 ${
               isNaN((verticesNum ** 2 - verticesNum) / 2) ? 0 : (verticesNum ** 2 - verticesNum) / 2
@@ -475,16 +474,7 @@ export async function runMinimumSpanningTree() {
         const from = Math.floor(i / verticesNum);
         const to = i % verticesNum;
         if (from >= to) return null;
-        console.log(i);
         edges.push([from, to, valArr[valIndex++]]);
-      });
-      Notify.notification({
-        title: '已生成随机参数',
-        message: `顶点: [${vertices.join(', ')}], 边: [${edges
-          .map(edge => `[${vertices[edge[0]]}-${edge[2]}-${vertices[edge[1]]}]`)
-          .join(', ')}]`,
-        duration: 3000,
-        type: 'info',
       });
       return [edges, vertices];
     },
