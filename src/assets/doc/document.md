@@ -299,6 +299,8 @@ import type { CodeController } from './code-controller';
 import { runExactAlgorithm, runMetaHeuristicAlgorithm } from 'root\src\utils\code.ts'
 // 导入代码，控制器和任务创建函数
 import { get[AL]Code, create[AL], [AL]Controller } from '../algorithm/[AL]';
+// 使用dialog
+import { createDialog } from '../components/dialog/index.js';
 // 导入代码高亮
 import hljs from 'highlight.js';
 const { highlight } = hljs;
@@ -311,6 +313,9 @@ const highlightCode = highlight(get[AL]Code().join('\n'), {
 export async function run[AL]() {
   // 根据算法创建随机数据
   const data = '// ...';
+  // 或者创建dialog由用户输入值
+  const dialog = createDialog([{ /* ... */ }]);
+  const data = await dialog;
 
   // 实例化控制器
   const controller = new [AL]Controller();
