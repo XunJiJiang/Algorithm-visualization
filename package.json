@@ -10,6 +10,9 @@
     "build": "tsc && vite build && cd dist && pnpm i && electron-builder",
     "preview": "vite preview"
   },
+  "license": "GPL-3.0-only",
+  "homepage": "https://github.com/XunJiJiang/Algorithm-visualization",
+  "bugs": "https://github.com/XunJiJiang/Algorithm-visualization/issues",
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
